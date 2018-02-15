@@ -12,12 +12,14 @@ import config
 import gestion
 from flask import Flask, render_template
 
-##### Creation de la base de donnee
-def lancer ():
+# #### Creation de la base de donnee
+
+
+def lancer():
     # on verifie si la base n'existe pas deja
     first = not os.access(config.base, os.R_OK)
 
-    conn = sqlite3.connect(config.base, detect_types = config.detect_types)
+    conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
 
     # si elle n'existe pas, on l'initialise
@@ -32,9 +34,10 @@ def lancer ():
     app = application(cursor)
     app.run()
 
-    #ne pas oublier de fermer la base
+# ne pas oublier de fermer la base
     conn.close()
-##### Creation de l'application
+# #### Creation de l'application
+
 
 def application(cursor):
     app = Flask(__name__)
@@ -42,6 +45,11 @@ def application(cursor):
     @app.route('/')
     def hello_world():
         return "Hello World"
+
+    @app.route("/series")
+    def series():
+        cursor.execute()
+        return render_template()
 
     return app
 
