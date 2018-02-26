@@ -71,16 +71,21 @@ def init_especes(cursor):
             id_caractere = cursor.lastrowid
             # on incere les modalites du caractere
             for m in dic_caract[c]:
-                cursor.execute(ts.create_modalite,
-                    {"nom": str(m), "id_caractere": id_caractere})
+                cursor.execute(
+                    ts.create_modalite,
+                    {"nom": str(m), "id_caractere": id_caractere}
+                )
 
 
 def recursive_serie(avant, cursor, num):
     """
     Cree la liste des correspondances id_photo / num de serie
     """
-    instruc = {"serie": [{"id": num, "camera": avant[1], "debut": avant[0]}],
-            "photo": list()}
+    print(avant)
+    instruc = {
+        "serie": [{"id": num, "camera": avant[1], "debut": avant[0]}],
+        "photo": list()
+        }
     while True:
         instruc["photo"].append({"serie": num, "id": avant[2]})
         instruc["serie"][0]["fin"] = avant[0]
@@ -108,7 +113,8 @@ def init_serie(cursor):
 
 
 def genere(cursor, col):
-    return [c for c in cursor.execute(ts.colonnes_distinctes, {"col": col})]
+    return [c[0] for c in cursor.execute(
+        ts.colonnes_distinctes.format(col=col, tab="Serie"))]
 
 # ### Trouver plus simple et mettre la date en jours
 # ### resoudre le problemee
@@ -116,13 +122,14 @@ def genere(cursor, col):
 
 def select_serie(cursor):
     cam = genere(cursor, "fk_camera")
-    date = genere(cursor, "date_debut")
+    date = [d.date().isoformat() for d in genere(cursor, "date_debut")]
     print(cam, date)
     tableau = {cell: list() for cell in product(cam, date)}
     print(tableau)
 
     for id_serie, fk_camera, debut, fin in cursor.execute(ts.select_serie):
-        tableau[fk_camera, debut].append((id_serie, fin))
+        tableau[fk_camera, debut.date().isoformat()].append(
+            (id_serie, fin.date().isoformat()))
     return tableau
 
 if __name__ == "__main__":

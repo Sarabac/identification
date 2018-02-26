@@ -4,7 +4,6 @@ library("RSQLite")
 drv <- SQLite()
 cursor <- dbConnect(drv, dbname="chevreuil.db")
 # requete
-query = dbSendQuery(conn = cursor, "SELECT * FROM Serie")
+query = dbSendQuery(conn = cursor, "SELECT * FROM Photo")
 # conversion en data frame
 donn = dbFetch(query, n = -1)
-print(donn)

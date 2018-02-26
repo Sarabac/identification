@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Éditeur de Spyder
 
-Ceci est un script temporaire.
-"""
 
 import sqlite3
 import os
@@ -33,10 +29,9 @@ def lancer():
 
     app = application(cursor)
     app.run()
-
-# ne pas oublier de fermer la base
+    # ne pas oublier de fermer la base
     conn.close()
-# #### Creation de l'application
+    # #### Creation de l'application
 
 
 def application(cursor):
@@ -48,7 +43,7 @@ def application(cursor):
 
     @app.route("/series")
     def series():
-        cursor.execute()
+        tableau = gestion.select_serie(cursor)
         return render_template()
 
     return app

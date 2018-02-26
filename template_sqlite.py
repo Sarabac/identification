@@ -7,9 +7,10 @@ Created on Tue Feb 13 08:16:45 2018
 
 creation = """
 CREATE TABLE 'User' (
+'id_user' INTEGER,
 'pseudo' TEXT,
 'pw'	TEXT,
-PRIMARY KEY(pw)
+PRIMARY KEY(id_user)
 );
 CREATE TABLE 'Pointer' (
 'fk_photo'	INTEGER,
@@ -39,8 +40,9 @@ PRIMARY KEY(id_modalite),
 FOREIGN KEY(fk_caractere) REFERENCES Caractere(id_caractere)
 );
 CREATE TABLE 'Espece' (
+'id_espece' INTEGER,
 'nom_espece'	TEXT,
-PRIMARY KEY(nom_espece)
+PRIMARY KEY(id_espece)
 );
 CREATE TABLE 'Caracteriser' (
 'fk_animal'	INTEGER,
@@ -67,10 +69,10 @@ CREATE TABLE 'Animal' (
 'id_animal'	INTEGER,
 'date_entree' INTEGER,
 'fk_espece'	INTEGER,
-'fk_user'	TEXT,
+'fk_user'	INTEGER,
 PRIMARY KEY(id_animal),
 FOREIGN KEY(fk_espece) REFERENCES Espece(id_espece),
-FOREIGN KEY(fk_user) REFERENCES User(pw)
+FOREIGN KEY(fk_user) REFERENCES User(id_user)
 );
 CREATE TABLE 'Serie'(
 id_serie INTEGER,
@@ -119,5 +121,5 @@ SELECT id_serie, fk_camera, date_debut, date_fin FROM Serie;
 """
 
 colonnes_distinctes = """
-SELECT DISTINCT :col FROM Serie ORDER BY :col;
+SELECT DISTINCT {col} FROM {tab} ORDER BY {col};
 """
