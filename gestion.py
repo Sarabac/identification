@@ -6,16 +6,16 @@ Created on Mon Feb 12 21:54:03 2018
 @author: luxis
 """
 from datetime import datetime
-from itertools import product
+import itertools
 import sqlite3
 from PIL import Image
 import os
 import re
 
-
 import especes
 import config
 import template_sqlite as ts
+
 
 def init_base(cursor):
     """
@@ -63,10 +63,11 @@ def init_especes(cursor):
     for e in esp:
         # le nom de la variable devient le nom d'espece
         cursor.execute(ts.create_espece, {"espece": e})
+        id_esp = cursor.lastrowid
         dic_caract = getattr(especes, e)
         # on entre dans les caracteres de l'espece
         for c in dic_caract.keys():
-            cursor.execute(ts.create_caractere, {"espece": e, "nom": c})
+            cursor.execute(ts.create_caractere, {"espece": id_esp, "nom": c})
             # on recupere l'identifiant du caractere insere
             id_caractere = cursor.lastrowid
             # on incere les modalites du caractere
@@ -112,31 +113,69 @@ def init_serie(cursor):
     cursor.executemany(ts.update_photo, instructions["photo"])
 
 
-def genere(cursor, col):
-    return [c[0] for c in cursor.execute(
-        ts.colonnes_distinctes.format(col=col, tab="Serie"))]
+def affichage_series(cursor):
+    cursor.execute(ts.select_serie)
+    a_afficher = dict()
+    series = [i for i in cursor.fetchall()]
+    a_afficher["cameras"] = sorted(list(set([s[1] for s in series])))
+    a_afficher["dates"] = sorted(list(set([str(s[2].date()) for s in series])))
+    a_afficher["cellules"] = dict()
+    for coord in itertools.product(a_afficher["dates"], a_afficher["cameras"]):
+        a_afficher["cellules"][coord] = list()
+        for s in series:
+            if s[1] == coord[1] and str(s[2].date()) == coord[0]:
+                a_afficher["cellules"][coord].append({
+                    "id": s[0],
+                    "debut": str(s[2].time()),
+                    "fin": str(s[2].time())
+                    })
+    return a_afficher
 
-# ### Trouver plus simple et mettre la date en jours
-# ### resoudre le problemee
+
+def affichage_photos(cursor, id_serie):
+    affichage = dict(photos=list())
+    # on commence par l'id et le chemin vers chaque photo
+    cursor.execute(ts.select_photo, {"id_serie": id_serie})
+
+    for id, chem in cursor.fetchall():
+        affichage["photos"].append((
+            int(id),
+            os.path.join(config.photos, chem.encode())
+        ))
+    print(affichage)
+    return affichage
 
 
-def select_serie(cursor):
-    cam = genere(cursor, "fk_camera")
-    date = [d.date().isoformat() for d in genere(cursor, "date_debut")]
-    print(cam, date)
-    tableau = {cell: list() for cell in product(cam, date)}
-    print(tableau)
+def unicode2str(iterable):
+    result = list()
+    for a in iterable:
+        ligne = list()
+        for b in a:
+            if isinstance(b, type("a".decode())):
+                c = b.encode()
+            else:
+                c = b
+            ligne.append(c)
+        result.append(ligne)
+    return result
 
-    for id_serie, fk_camera, debut, fin in cursor.execute(ts.select_serie):
-        tableau[fk_camera, debut.date().isoformat()].append(
-            (id_serie, fin.date().isoformat()))
-    return tableau
+
+def get_espece(cursor):
+    result = list()
+    cursor.execute(ts.ajax_get_espece)
+    for ligne in unicode2str(cursor.fetchall()):
+        esp = [ligne[0], ligne[1]]
+        car = [ligne[2], ligne[3]]
+        mod = [ligne[4], ligne[5]]
+        result.append([i for i in [esp, car, mod] if None not in i])
+
+    return result
 
 if __name__ == "__main__":
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
 
-    print(select_serie(cursor))
+    print(get_espece(cursor))
 
     conn.commit()
     conn.close()

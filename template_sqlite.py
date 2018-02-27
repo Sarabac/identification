@@ -117,9 +117,24 @@ VALUES (:id, :camera, :debut, :fin);
 """
 
 select_serie = """
-SELECT id_serie, fk_camera, date_debut, date_fin FROM Serie;
+SELECT id_serie, model , date_debut, date_fin FROM Serie
+INNER JOIN Camera ON Serie.fk_camera = Camera.id_camera;
+"""
+
+select_photo = """
+SELECT id_photo, file FROM photo
+WHERE fk_serie = :id_serie;
 """
 
 colonnes_distinctes = """
 SELECT DISTINCT {col} FROM {tab} ORDER BY {col};
+"""
+
+ajax_get_espece = """
+SELECT Espece.id_espece, Espece.nom_espece,
+Caractere.id_caractere, Caractere.nom_caractere,
+Modalite.id_modalite, Modalite.nom_modalite
+FROM Espece
+LEFT JOIN Caractere ON fk_espece = id_espece
+LEFT JOIN Modalite ON fk_caractere = id_caractere;
 """

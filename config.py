@@ -11,8 +11,9 @@ from datetime import timedelta
 # ### chemin vers les dossier #####
 # ## s'ecrit sout la forme :
 # os.path.join("dossier", "sous_dossier", "sous_sous_dossier")
-photos = os.path.join("photos")
+photos = os.path.join("static", "photos")
 base = os.path.join("chevreuil.db")
+template = os.path.join("template")
 
 # ## interval maximum entre les photos pour former une serie
 # ## s'ecrit sous la forme timedelta(jours, secondes, microsecondes)

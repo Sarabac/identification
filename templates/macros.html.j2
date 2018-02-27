@@ -1,0 +1,5 @@
+{% macro link(nom_fichiers, extension='css') %}
+    {% for fichier in nom_fichiers %}
+        <link href="{{ url_for('static', filename=fichier + '.' + extension) }}" rel="stylesheet" type="text/css" />
+    {% endfor %}
+{% endmacro %}

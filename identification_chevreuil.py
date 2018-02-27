@@ -6,7 +6,10 @@ import sqlite3
 import os
 import config
 import gestion
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
+
+# a retirer
+from especes import chevreuil
 
 # #### Creation de la base de donnee
 
@@ -42,9 +45,22 @@ def application(cursor):
         return "Hello World"
 
     @app.route("/series")
-    def series():
-        tableau = gestion.select_serie(cursor)
-        return render_template()
+    def liste_series():
+        a_afficher = gestion.affichage_series(cursor)
+        return render_template("series.html.j2", **a_afficher)
+
+    @app.route("/serie/<int:id_serie>")
+    def etude_series(id_serie):
+        a_afficher = gestion.affichage_photos(cursor, id_serie)
+        return render_template("photos.html.j2", **a_afficher)
+
+        return "num {}".format(id_serie)
+
+    @app.route("/especes")
+    def donne_especes():
+        retour = jsonify(especes=gestion.get_espece(cursor))
+        print(retour)
+        return retour
 
     return app
 

@@ -1,0 +1,33 @@
+{% extends "layout.html.j2" %}
+{% block main %}
+
+{# series contient des listes de id, camera, date_debut, heure_debut, heure_fin #}
+<table>
+  <tr>
+    <th>Date \ Camera</th>
+      {% for cam in cameras%}
+        <th>{{cam}}</th>
+      {% endfor %}
+  </tr>
+
+
+  {% for date in dates%}
+    <tr>
+      <th>{{date}}</th>
+      {%for cam in cameras%}
+        <td>
+          {%for serie in cellules[(date, cam)]%}
+            <a class = "serie" href = {{ url_for('etude_series', id_serie = serie["id"]) }}>
+              <p>
+                {{serie["debut"]}}<br/>{{serie["fin"]}}
+              </p>
+            </a>
+          {%endfor%}
+        </td>
+      {%endfor%}
+    </tr>
+  {%endfor%}
+
+</table>
+
+{% endblock %}
