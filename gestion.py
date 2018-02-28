@@ -82,7 +82,6 @@ def recursive_serie(avant, cursor, num):
     """
     Cree la liste des correspondances id_photo / num de serie
     """
-    print(avant)
     instruc = {
         "serie": [{"id": num, "camera": avant[1], "debut": avant[0]}],
         "photo": list()
@@ -108,7 +107,6 @@ def init_serie(cursor):
     """
     cursor.execute(ts.select_date_photo)
     instructions = recursive_serie(cursor.fetchone(), cursor, 1)
-    print(instructions["serie"])
     cursor.executemany(ts.create_serie, instructions["serie"])
     cursor.executemany(ts.update_photo, instructions["photo"])
 
@@ -142,40 +140,38 @@ def affichage_photos(cursor, id_serie):
             int(id),
             os.path.join(config.photos, chem.encode())
         ))
-    print(affichage)
     return affichage
 
 
-def unicode2str(iterable):
-    result = list()
-    for a in iterable:
-        ligne = list()
-        for b in a:
-            if isinstance(b, type("a".decode())):
-                c = b.encode()
-            else:
-                c = b
-            ligne.append(c)
-        result.append(ligne)
+def definition_html(cursor):
+    result = dict()
+
+    cursor.execute("SELECT id_espece, nom_espece FROM Espece;")
+    result["especes"] = list(cursor.fetchall())
+
+    cursor.execute("""SELECT fk_espece, id_caractere, nom_caractere FROM Caractere;""")
+    result["caracteres"] = dict()
+    for fk, id, nom in cursor.fetchall():
+        if fk not in result["caracteres"].keys():
+            result["caracteres"][fk] = [(id, nom)]
+        else:
+            result["caracteres"][fk].append((id, nom))
+
+    cursor.execute("""SELECT fk_caractere, id_modalite, nom_modalite FROM Modalite;""")
+    result["modalites"] = dict()
+    for fk, id, nom in cursor.fetchall():
+        if fk not in result["modalites"].keys():
+            result["modalites"][fk] = [(id, nom)]
+        else:
+            result["modalites"][fk].append((id, nom))
     return result
 
-
-def get_espece(cursor):
-    result = list()
-    cursor.execute(ts.ajax_get_espece)
-    for ligne in unicode2str(cursor.fetchall()):
-        esp = [ligne[0], ligne[1]]
-        car = [ligne[2], ligne[3]]
-        mod = [ligne[4], ligne[5]]
-        result.append([i for i in [esp, car, mod] if None not in i])
-
-    return result
 
 if __name__ == "__main__":
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
 
-    print(get_espece(cursor))
+    print(definition_html(cursor))
 
     conn.commit()
     conn.close()

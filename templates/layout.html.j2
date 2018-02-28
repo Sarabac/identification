@@ -8,8 +8,13 @@
 <script type=text/javascript>
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
+
 <script type=text/javascript src={{ url_for('static', filename='jquery-1.8.3.min.js') }}></script>
+<script type=text/javascript src={{ url_for('static', filename='wheelzoom.js') }}></script>
+<script>$(plein_ecran)</script>
+
 {% block script %}{% endblock %}
+
 </head>
 
 <body>
@@ -19,6 +24,13 @@
     <main>
       {% block main %}{% endblock %}
     </main>
+
+    <nav>
+      {% block nav %}{% endblock %}
+    </nav>
+    <article>
+      {% block article %}{% endblock %}
+    </article>
 </body>
 
 </html>

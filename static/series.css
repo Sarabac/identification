@@ -1,3 +1,39 @@
+/*style generale*/
+body {
+  display: grid;
+  grid-template-columns: 1fr 70vw 1fr;
+  grid-template-rows: 17vh 1fr;
+  height: 100vh;
+  width: 100vw;
+}
+
+header{
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+main{
+  grid-column: 2;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+nav{
+  grid-column: 3;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+article{
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+/* style de la table des series */
 table {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
@@ -26,7 +62,40 @@ a p{
     text-align: center;
     color: #000D71
 }
+
 a p:hover{
     background-color: #333;
     color: #A1B9ED;
+}
+
+/* style de l'analyseur de photos */
+
+
+.cache, #definition{
+  display: none;
+}
+
+fieldset{
+  display: block;
+}
+
+.photo{
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#principale{
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+}
+
+.caracteres{
+  display: flex;
+  flex-direction: row;
+}
+
+.caracteres select{
+  flex: 1;
 }

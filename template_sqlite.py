@@ -18,8 +18,8 @@ CREATE TABLE 'Pointer' (
 'X'	REAL,
 'Y'	REAL,
 'date_pointage'	timestamp,
-FOREIGN KEY(fk_photo) REFERENCES Photo(id_photo),
-FOREIGN KEY(fk_animal) REFERENCES Animal(id_animal)
+FOREIGN KEY(fk_photo) REFERENCES Photo(id_photo) ON DELETE CASCADE,
+FOREIGN KEY(fk_animal) REFERENCES Animal(id_animal) ON DELETE CASCADE
 );
 CREATE TABLE 'Photo' (
 'id_photo'	INTEGER ,
@@ -47,9 +47,10 @@ PRIMARY KEY(id_espece)
 CREATE TABLE 'Caracteriser' (
 'fk_animal'	INTEGER,
 'fk_caractere'	INTEGER,
-'ref_modalite'	INTEGER,
-FOREIGN KEY(fk_animal) REFERENCES Animal(id_animal),
-FOREIGN KEY(fk_caractere) REFERENCES Caractere(id_caractere)
+'fk_modalite'	INTEGER,
+FOREIGN KEY(fk_animal) REFERENCES Animal(id_animal) ON DELETE CASCADE,
+FOREIGN KEY(fk_caractere) REFERENCES Caractere(id_caractere) ON DELETE CASCADE,
+FOREIGN KEY(fk_modalite) REFERENCES Modalite(id_modalite) ON DELETE CASCADE
 );
 CREATE TABLE "Caractere" (
 'id_caractere'	INTEGER ,

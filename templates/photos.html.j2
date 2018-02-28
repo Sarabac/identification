@@ -4,32 +4,75 @@ photos: liste de la forme [(id, chemin)...] avec
   id: id de la photo dans la base de donnee
   chemin: chemin vers la photo
 
-especes: liste de la forme[(id, nom, caracteristiques)...] avec
+especes: liste de la forme[(id, nom)...] avec
   id: id de l'espece
   nom: nom de l'espece
-  caracteristiques: liste des caracteristiques de l'espece de la forme
-                    [(id, nom, modalite)...] avec
-    id: id de la caracteristique
-    nom: nom de la caracteristique
-    modalite: liste des modalites de la forme(id, nom)
+
+caractere: dict de la forme[id_espece : (id, nom)...] avec
+  id: id du caractere
+  nom: nom du caractere
+modalite: dict de la forme[id_caractere : (id, nom)...] avec
+    id: id de la modalite
+    nom: nom de la modalite
 #}
 
 {% block script %}
 <script type=text/javascript src={{ url_for('static', filename='photos.js') }}></script>
 {% endblock %}
 
-{% block main %}
+{% block header %}
+<a href="{{ url_for('liste_series') }}"><button>retour</button></a>
+{% endblock %}
+
+{% block nav %}
   {%for id,che in photos%}
-    <div class = photo>
-      {#on retire les 7 premieres lettres de che qui correspondent a 'static/'#}
-      <img src={{url_for('static', filename=che[7:])}} name={{id}}/>
+    <div class=photo
+    style="background-image: url({{url_for('static', filename=che[7:])}})"
+    data-url={{url_for('static', filename=che[7:])}} >
+      {#on retire les 7 premieres lettres de che qui correspondent a 'static/'
+      <img src={{url_for('static', filename=che[7:])}} name={{id}}/>#}
     </div>
   {%endfor%}
 {%endblock%}
 
-{% block header %}
-  <div class = 'cache'>
-    {%for id,nom,caract in especes%}
+{% block main %}
+  <img id="principale"/>
+{% endblock %}
+
+
+{% block article %}
+  <div id = 'definition'>
+    {%for id_e,nom_e in especes%}
+
+      <fieldset data-num={{id_e}} class={{nom_e}}  tabindex=0>
+
+        <legend>
+          <input type="radio" name="animal" value={{nom_e}} onchange="select_radiobutton(this)"/>
+          {{nom_e}}
+          <input type="button" value="X" onclick="$(this).parent().parent().remove()" />
+        </legend>
+
+        <div class="contain_caract">
+        {%for id_c,nom_c in caracteres[id_e]%}
+        <div class="caracteres">
+        <label for={{nom_c}}>{{nom_c}}</label>
+        <select class={{nom_c}} data-num={{id_e}} name={{nom_c}}>
+          {%for id_m,nom_m in modalites[id_c]%}
+            <option class={{nom_m}} data-num={{id_m}}>
+              {{nom_m}}
+            </option>
+          {%endfor%}
+        </select>
+        </div>
+        {%endfor%}
+        </div>
+        
+      </fieldset>
+
     {%endfor%}
   </div>
+
+  <form id="animaux">
+
+  </form>
 {%endblock%}

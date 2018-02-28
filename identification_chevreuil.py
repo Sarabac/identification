@@ -51,16 +51,9 @@ def application(cursor):
 
     @app.route("/serie/<int:id_serie>")
     def etude_series(id_serie):
-        a_afficher = gestion.affichage_photos(cursor, id_serie)
-        return render_template("photos.html.j2", **a_afficher)
-
-        return "num {}".format(id_serie)
-
-    @app.route("/especes")
-    def donne_especes():
-        retour = jsonify(especes=gestion.get_espece(cursor))
-        print(retour)
-        return retour
+        ficher = gestion.affichage_photos(cursor, id_serie)
+        definition = gestion.definition_html(cursor)
+        return render_template("photos.html.j2", **dict(ficher, **definition))
 
     return app
 
