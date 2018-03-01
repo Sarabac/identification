@@ -6,7 +6,8 @@ import sqlite3
 import os
 import config
 import gestion
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, request, jsonify
+import json
 
 # a retirer
 from especes import chevreuil
@@ -54,6 +55,14 @@ def application(cursor):
         ficher = gestion.affichage_photos(cursor, id_serie)
         definition = gestion.definition_html(cursor)
         return render_template("photos.html.j2", **dict(ficher, **definition))
+
+    @app.route("/enregistrer", methods=["POST"])
+    def enregistrer():
+        print(request.get_data())
+        print(type(request.get_data()))
+        donnees = json.loads(request.get_data())
+        # de la forme : [{id_e: x, photos:[x,x,x], modalites:[x,x,x,x,x]}...]
+        return jsonify(status="ok")
 
     return app
 

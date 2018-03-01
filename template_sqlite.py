@@ -15,9 +15,6 @@ PRIMARY KEY(id_user)
 CREATE TABLE 'Pointer' (
 'fk_photo'	INTEGER,
 'fk_animal'	INTEGER,
-'X'	REAL,
-'Y'	REAL,
-'date_pointage'	timestamp,
 FOREIGN KEY(fk_photo) REFERENCES Photo(id_photo) ON DELETE CASCADE,
 FOREIGN KEY(fk_animal) REFERENCES Animal(id_animal) ON DELETE CASCADE
 );
@@ -46,10 +43,8 @@ PRIMARY KEY(id_espece)
 );
 CREATE TABLE 'Caracteriser' (
 'fk_animal'	INTEGER,
-'fk_caractere'	INTEGER,
 'fk_modalite'	INTEGER,
 FOREIGN KEY(fk_animal) REFERENCES Animal(id_animal) ON DELETE CASCADE,
-FOREIGN KEY(fk_caractere) REFERENCES Caractere(id_caractere) ON DELETE CASCADE,
 FOREIGN KEY(fk_modalite) REFERENCES Modalite(id_modalite) ON DELETE CASCADE
 );
 CREATE TABLE "Caractere" (
@@ -138,4 +133,8 @@ Modalite.id_modalite, Modalite.nom_modalite
 FROM Espece
 LEFT JOIN Caractere ON fk_espece = id_espece
 LEFT JOIN Modalite ON fk_caractere = id_caractere;
+"""
+
+detruire_animal_sur_photo = """
+
 """

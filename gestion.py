@@ -125,7 +125,7 @@ def affichage_series(cursor):
                 a_afficher["cellules"][coord].append({
                     "id": s[0],
                     "debut": str(s[2].time()),
-                    "fin": str(s[2].time())
+                    "fin": str(s[3].time())
                     })
     return a_afficher
 

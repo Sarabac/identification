@@ -22,16 +22,17 @@ modalite: dict de la forme[id_caractere : (id, nom)...] avec
 
 {% block header %}
 <a href="{{ url_for('liste_series') }}"><button>retour</button></a>
+<button onclick="enregistrer()">enregistrer</button>
 {% endblock %}
 
 {% block nav %}
   {%for id,che in photos%}
-    <div class=photo
-    style="background-image: url({{url_for('static', filename=che[7:])}})"
-    data-url={{url_for('static', filename=che[7:])}} >
+    <img class=photo
+    src={{url_for('static', filename=che[7:])}}
+    data-url={{url_for('static', filename=che[7:])}}
+    data-num={{id}} />
       {#on retire les 7 premieres lettres de che qui correspondent a 'static/'
       <img src={{url_for('static', filename=che[7:])}} name={{id}}/>#}
-    </div>
   {%endfor%}
 {%endblock%}
 
@@ -44,12 +45,13 @@ modalite: dict de la forme[id_caractere : (id, nom)...] avec
   <div id = 'definition'>
     {%for id_e,nom_e in especes%}
 
-      <fieldset data-num={{id_e}} class={{nom_e}}  tabindex=0>
+      <fieldset data-num={{id_e}} class={{nom_e}}  tabindex=0 data-photos="[]">
 
         <legend>
-          <input type="radio" name="animal" value={{nom_e}} onchange="select_radiobutton(this)"/>
-          {{nom_e}}
           <input type="button" value="X" onclick="$(this).parent().parent().remove()" />
+          {{nom_e}}
+          <input type="checkbox" name="animal" value={{nom_e}}
+          class = "check_animal" onclick="click_check(this)"/>
         </legend>
 
         <div class="contain_caract">
@@ -57,6 +59,7 @@ modalite: dict de la forme[id_caractere : (id, nom)...] avec
         <div class="caracteres">
         <label for={{nom_c}}>{{nom_c}}</label>
         <select class={{nom_c}} data-num={{id_e}} name={{nom_c}}>
+          <option class="none" data-num=0 selected>aucun</option>
           {%for id_m,nom_m in modalites[id_c]%}
             <option class={{nom_m}} data-num={{id_m}}>
               {{nom_m}}
@@ -66,7 +69,7 @@ modalite: dict de la forme[id_caractere : (id, nom)...] avec
         </div>
         {%endfor%}
         </div>
-        
+
       </fieldset>
 
     {%endfor%}

@@ -10,21 +10,77 @@ remplir_creation = function(){
   })
 }
 
+enregistrer = function(){
+
+  individus = new Array()
+  $("#animaux fieldset").each(function(i){
+    modalites = new Array()
+    $(this).find("option:selected").each(function(i){
+      num = $(this).data("num")
+      if(num!=0){//different de "aucun"
+        modalites.push(num)
+      }
+    })
+    individus.push({
+      id_e: $(this).data("num"),
+      photos: $(this).data("photos"),
+      modalites: modalites
+    })
+  })
+  donnees = JSON.stringify( individus )
+  console.log(donnees)
+  $.ajax({
+    url: '/enregistrer',
+    type: "POST",
+    success: function(rep){console.log(rep)},
+    error: function(err){console.log(err)},
+    data: donnees,
+    dataType: "text"
+  })
+}
+
 clic_sur_creation = function(){
   var esp = $(this).attr("class")
   var nouveau = $("#definition fieldset."+esp).clone().prependTo("#animaux")
-  select_radiobutton(nouveau.find("input:radio").prop("checked", true))
+  //nouveau.find("input:checkbox").prop("checked", true)
 }
 
-select_radiobutton = function(obj){
-  $("#animaux .contain_caract").addClass("cache")
-  $(obj).parent().siblings(".contain_caract").removeClass("cache")
+clic_sur_miniature = function(){
+  $("#principale").attr("src",$(this).data("url"))
+  $(".photo").removeClass("select")
+  $(this).addClass("select")
+
+  //on change les cases checkees qui indiquent qu'un animal s'y trouve
+  num = $(this).data("num")
+  $("#animaux fieldset").each(function(i){
+    check = $(this).find(".check_animal")
+    if ($(this).data("photos").includes(num)){
+      check.prop("checked", true)
+    }else{
+      check.prop("checked", false)
+
+    }
+  })
+}
+
+click_check = function(self){
+  photos = $(self).parent().parent().data("photos")
+  console.log(photos)
+  id_photo = $("nav .select").data("num")
+  if ($(self).is(":checked")){
+    if (!(photos.includes(id_photo))){photos.push(id_photo)}
+  }else{
+    if (photos.includes(id_photo)){
+      index = photos.indexOf(id_photo)
+      photos.splice(index, 1)
+    }
+  }
 }
 
 $(function(){
   remplir_creation()
   $("#creation option").on("click", clic_sur_creation)
   wheelzoom(document.querySelectorAll("#principale"))
-  $(".photo").click(function(){$("#principale").attr("src",$(this).data("url"))})
-
+  $(".photo").on("click", clic_sur_miniature)
+  $($(".photo")[0]).trigger("click")
 })

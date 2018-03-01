@@ -25,12 +25,17 @@ nav{
   grid-column: 3;
   grid-row-start: 1;
   grid-row-end: 3;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
+
 article{
   grid-column: 1;
   grid-row: 2;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 /* style de la table des series */
@@ -71,7 +76,7 @@ a p:hover{
 /* style de l'analyseur de photos */
 
 
-.cache, #definition{
+#definition{
   display: none;
 }
 
@@ -79,15 +84,22 @@ fieldset{
   display: block;
 }
 
+nav img{
+  margin-bottom: 3px
+}
 .photo{
-  height: 100%;
-  background-size: contain;
-  background-repeat: no-repeat;
+  width: 100%;
+  height: auto;
+}
+.select{
+  border: solid;
+  border-color: orange;
 }
 
 #principale{
-  width: 100%;
-  height: auto;
+  width: auto;
+  max-height: 95vh;
+  max-width: 100%;
   cursor: crosshair;
 }
 
@@ -98,4 +110,9 @@ fieldset{
 
 .caracteres select{
   flex: 1;
+}
+
+.none{
+  background-color: pink;
+  font-style: italic;
 }
