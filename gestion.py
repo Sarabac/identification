@@ -149,15 +149,16 @@ def definition_html(cursor):
     cursor.execute("SELECT id_espece, nom_espece FROM Espece;")
     result["especes"] = list(cursor.fetchall())
 
-    cursor.execute("""SELECT fk_espece, id_caractere, nom_caractere FROM Caractere;""")
+    instr = """SELECT fk_espece, id_caractere, nom_caractere FROM Caractere;"""
+    cursor.execute(instr)
     result["caracteres"] = dict()
     for fk, id, nom in cursor.fetchall():
         if fk not in result["caracteres"].keys():
             result["caracteres"][fk] = [(id, nom)]
         else:
             result["caracteres"][fk].append((id, nom))
-
-    cursor.execute("""SELECT fk_caractere, id_modalite, nom_modalite FROM Modalite;""")
+    instr = """SELECT fk_caractere, id_modalite, nom_modalite FROM Modalite;"""
+    cursor.execute(instr)
     result["modalites"] = dict()
     for fk, id, nom in cursor.fetchall():
         if fk not in result["modalites"].keys():
@@ -165,6 +166,32 @@ def definition_html(cursor):
         else:
             result["modalites"][fk].append((id, nom))
     return result
+
+
+def enregistrer_animaux(cursor, animaux):
+    """
+    animaux: de la forme [{id_e: x, photos:[x,x,x], modalites:[x,x,x,x,x]}...]
+    """
+    # on commence par supprimer les precedents enregistrements
+    #  qui ont eventuellement eu lieu sur les photos
+    print(animaux)
+    a_suppr = list()
+    for ind in animaux:
+        a_suppr += ind["photos"]
+    for id_photo in list(set(a_suppr)):
+        cursor.execute(ts.detruire_animal_sur_photo, {"id_photo": id_photo})
+
+    for ind in animaux:
+        data = {"fk_espece": ind["id_e"], "date_entree": datetime.today()}
+        cursor.execute(ts.create_animal, data)
+        id_a = cursor.lastrowid
+        for id_p in ind["photos"]:
+            data = {"fk_photo": id_p, "fk_animal": id_a}
+            cursor.execute(ts.pointer, data)
+        for id_m in ind["modalites"]:
+            data = {"fk_modalite": id_m, "fk_animal": id_a}
+            cursor.execute(ts.caracteriser, data)
+
 
 
 if __name__ == "__main__":

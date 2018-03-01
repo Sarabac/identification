@@ -136,5 +136,20 @@ LEFT JOIN Modalite ON fk_caractere = id_caractere;
 """
 
 detruire_animal_sur_photo = """
-
+DELETE FROM Animal WHERE id_animal IN (
+SELECT fk_animal FROM Pointer INNER JOIN Photo
+ON fk_photo = :id_photo
+);
+"""
+create_animal = """
+INSERT INTO Animal(fk_espece, date_entree)
+VALUES (:fk_espece, :date_entree);
+"""
+pointer = """
+INSERT INTO Pointer(fk_photo, fk_animal)
+VALUES (:fk_photo, :fk_animal);
+"""
+caracteriser = """
+INSERT INTO Caracteriser(fk_modalite, fk_animal)
+VALUES (:fk_modalite, :fk_animal);
 """

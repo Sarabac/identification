@@ -21,6 +21,7 @@ def lancer():
 
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
+    cursor.execute("""PRAGMA foreign_keys = ON""")
 
     # si elle n'existe pas, on l'initialise
     if first:
@@ -31,14 +32,14 @@ def lancer():
         # on enregistre les modifications
         conn.commit()
 
-    app = application(cursor)
+    app = application(cursor, conn)
     app.run()
     # ne pas oublier de fermer la base
     conn.close()
     # #### Creation de l'application
 
 
-def application(cursor):
+def application(cursor, conn):
     app = Flask(__name__)
 
     @app.route('/')
@@ -62,6 +63,8 @@ def application(cursor):
         print(type(request.get_data()))
         donnees = json.loads(request.get_data())
         # de la forme : [{id_e: x, photos:[x,x,x], modalites:[x,x,x,x,x]}...]
+        gestion.enregistrer_animaux(cursor, donnees)
+        conn.commit()
         return jsonify(status="ok")
 
     return app
