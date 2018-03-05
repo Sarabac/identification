@@ -8,9 +8,17 @@ Permer de definir les especes, leurs caractere et
 les modalites de ces caracteres
 
 Attention !!!
-ne pas mettre d'espace entre les noms de caracteres et de modalites
+Ne pas mettre d'espace entre les noms de caracteres et de modalites!
+Ne pas mettre de caracteres speciaux ni d'accents !
 """
-
+grenouille = {
+    "ventre": ["blanc", "blanc_tachete_noir", "orange"],
+    "pelotes": ["presentes", "abscentes"],
+    "couleur_pelotes": ["grise", "noires", "brunes"],
+    "museau": ["fin", "anguleux"],
+    "pupilles": ["ovales", "applaties"],
+    "iridophores": ["fins", "grossiers"]
+}
 chevreuil = {
     "bois": [0, 1, 2],
     "cors-droit": [0, 1, 2, 3, 4, 5, 6, 7, 8],

@@ -27,7 +27,8 @@ enregistrer = function(){
       modalites: modalites
     })
   })
-  donnees = JSON.stringify( individus )
+  id_serie = $("#principale").data("serie")
+  donnees = JSON.stringify( {"individus": individus, "serie": id_serie} )
   console.log(donnees)
   $.ajax({
     url: '/enregistrer',

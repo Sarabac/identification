@@ -36,12 +36,13 @@ def init_photo(cursor):
             if verification.search(nom)]
     # ## extraction des informations importantes
     infos = list()
+    # changer pour "nom du fichier"
     for nom in noms:
         data = Image.open(os.path.join(config.photos, nom))._getexif()
         infos.append({
             'file': nom,
             'marque': data[271],
-            'model': data[272],
+            'model': data.get(272, "Appareil"),
             # la date est transformee en objet datetime
             'date': datetime.strptime(data[36867], '%Y:%m:%d %H:%M:%S')
 
@@ -175,13 +176,9 @@ def enregistrer_animaux(cursor, animaux):
     # on commence par supprimer les precedents enregistrements
     #  qui ont eventuellement eu lieu sur les photos
     print(animaux)
-    a_suppr = list()
-    for ind in animaux:
-        a_suppr += ind["photos"]
-    for id_photo in list(set(a_suppr)):
-        cursor.execute(ts.detruire_animal_sur_photo, {"id_photo": id_photo})
+    cursor.execute(ts.detruire_animal_sur_photo, {"id_serie": animaux["serie"]})
 
-    for ind in animaux:
+    for ind in animaux["individus"]:
         data = {"fk_espece": ind["id_e"], "date_entree": datetime.today()}
         cursor.execute(ts.create_animal, data)
         id_a = cursor.lastrowid
@@ -198,7 +195,8 @@ if __name__ == "__main__":
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
 
-    print(definition_html(cursor))
+
+    print(list(cursor.fetchall()))
 
     conn.commit()
     conn.close()
