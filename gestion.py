@@ -32,21 +32,24 @@ def init_photo(cursor):
     """
     # ## selection des ficher se terminant par ".jpg" ou ".JPG"
     verification = re.compile("([^\s]+(\.(?i)(jpg))$)")
-    noms = [nom for nom in os.listdir(config.photos)
-            if verification.search(nom)]
+    dossiers = [nom for nom in os.listdir(config.photos)]
     # ## extraction des informations importantes
     infos = list()
     # changer pour "nom du fichier"
-    for nom in noms:
-        data = Image.open(os.path.join(config.photos, nom))._getexif()
-        infos.append({
-            'file': nom,
-            'marque': data[271],
-            'model': data.get(272, "Appareil"),
-            # la date est transformee en objet datetime
-            'date': datetime.strptime(data[36867], '%Y:%m:%d %H:%M:%S')
+    for dossier in dossiers:
+        noms = [nom for nom in os.listdir(os.path.join(config.photos, dossier))
+                if verification.search(nom)]
+        for nom in noms:
+            img = Image.open(os.path.join(config.photos, dossier, nom))
+            data = img._getexif()
+            infos.append({
+                'file': os.path.join(dossier, nom),
+                'marque': data[271],
+                'model': dossier,
+                # la date est transformee en objet datetime
+                'date': datetime.strptime(data[36867], '%Y:%m:%d %H:%M:%S')
 
-        })
+            })
     # ## insertion des informations dans les requetes sqlite
     for data in infos:
         cursor.execute(ts.create_camera, {
@@ -175,7 +178,6 @@ def enregistrer_animaux(cursor, animaux):
     """
     # on commence par supprimer les precedents enregistrements
     #  qui ont eventuellement eu lieu sur les photos
-    print(animaux)
     cursor.execute(ts.detruire_animal_sur_photo, {"id_serie": animaux["serie"]})
 
     for ind in animaux["individus"]:
@@ -190,13 +192,38 @@ def enregistrer_animaux(cursor, animaux):
             cursor.execute(ts.caracteriser, data)
 
 
+def charger(cursor, serie):
+    cursor.execute(ts.extract_animal_serie, {"id_serie": serie})
+    animaux = [i for i in cursor.fetchall()]
+    result = list()
+    print("aniamux:",animaux)
+    for id in animaux:
+        cursor.execute(
+            "SELECT fk_photo FROM Pointer WHERE fk_animal=?", id
+        )
+        photos = [i[0] for i in cursor.fetchall()]
+        cursor.execute(
+            "SELECT fk_modalite FROM Caracteriser WHERE fk_animal=?", id
+        )
+        modalites = [i[0] for i in cursor.fetchall()]
+        cursor.execute(
+            "SELECT fk_espece FROM Animal WHERE id_animal=?", id
+        )
+        esp = cursor.fetchall()
+        result.append({
+            "id": esp[0],
+            "photos": photos,
+            "modalites": modalites
+        })
+    print(result)
+    return result
 
 if __name__ == "__main__":
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
 
 
-    print(list(cursor.fetchall()))
+    print(charger(cursor, 1))
 
     conn.commit()
     conn.close()

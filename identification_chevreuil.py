@@ -55,8 +55,12 @@ def application(cursor, conn):
     def etude_series(id_serie):
         ficher = gestion.affichage_photos(cursor, id_serie)
         definition = gestion.definition_html(cursor)
-        parametres = dict(ficher, serie=id_serie, **definition)
-        return render_template("photos.html.j2", **parametres)
+        param = dict(ficher, serie=id_serie, **definition)
+        param = dict(
+            param,
+            chargement=json.dumps(gestion.charger(cursor, id_serie))
+        )
+        return render_template("photos.html.j2", **param)
 
     @app.route("/enregistrer", methods=["POST"])
     def enregistrer():

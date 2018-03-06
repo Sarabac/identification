@@ -145,6 +145,12 @@ create_animal = """
 INSERT INTO Animal(fk_espece, date_entree)
 VALUES (:fk_espece, :date_entree);
 """
+extract_animal_serie = """
+SELECT DISTINCT id_animal FROM Serie INNER JOIN Photo ON id_serie=fk_serie
+INNER JOIN Pointer ON id_photo=fk_photo
+INNER JOIN Animal ON id_animal=fk_animal
+WHERE id_serie=:id_serie;
+"""
 pointer = """
 INSERT INTO Pointer(fk_photo, fk_animal)
 VALUES (:fk_photo, :fk_animal);
