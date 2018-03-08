@@ -12,15 +12,22 @@ Ne pas mettre d'espace entre les noms de caracteres et de modalites!
 Ne pas mettre de caracteres speciaux ni d'accents !
 """
 grenouille = {
-    "ventre": ["blanc", "blanc_tachete_noir", "orange"],
-    "pelotes": ["presentes", "abscentes"],
-    "couleur_pelotes": ["grise", "noires", "brunes"],
-    "museau": ["fin", "anguleux"],
-    "pupilles": ["ovales", "applaties"],
-    "iridophores": ["fins", "grossiers"]
+    "[couleur]ventre": ["blanc", "blanc_tachete_noir", "orange"],
+    "pelotes": ["grise", "noires", "brunes", "abscentes"],
+    "museau": ["pointu", "arrondis"],
+    "[pupilles]forme": ["ovales", "applaties"],
+    "[pupilles]lisere": ["large", "fin-abscent"],
+    "iridophores": ["fins", "grossiers"],
+    "[tympan]diametre": ["<oeil", "=oeil"],
+    "[tympan]distance_oeil": ["1-2mm", "eloigne"],
+    "Plis_dorso-latéreaux": ["paralleles", "raproches"],
+    "Corps": ["brun-fonce", "brun-rouge", "noir"],
+    "peau": ["lisse", "granuleuse"],
+    "bande-supralabiale": ["abscente", "avant-oeil", "apres-oeil"],
+    "[couleur]gorge": ["gris-fonce", "jaunatre"]
 }
 chevreuil = {
-    "bois": [0, 1, 2],
+    "bois": ["abscents", "droit", "gauches", "les_deux"],
     "cors-droit": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "cors-gauche": [0, 1, 2, 3, 4, 5, 6, 7, 8]
 }

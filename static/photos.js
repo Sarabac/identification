@@ -52,7 +52,7 @@ chargement = function(){
     field = $("#definition fieldset[data-num="+animal["id"]+"]").clone().prependTo("#animaux")
     for (j in animal["modalites"]){
       modalite = animal["modalites"][j]
-      x=field.find("option[data-num="+modalite+"]").prop("selected", true)
+      field.find("option[data-num="+modalite+"]").prop("selected", true)
     }
     field.data("photos", animal["photos"])
     if (animal["photos"].indexOf($("nav .select").data("num"))>=0){
