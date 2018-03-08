@@ -21,6 +21,8 @@ def init_base(cursor):
     """
     Cree les tables qui composent la base de donnee.
     """
+    # les instruction sont executees les unes apres les autre
+    # dans une liste.
     for instr in ts.creation.split(";"):
         cursor.execute(instr)
 
@@ -28,7 +30,7 @@ def init_base(cursor):
 def init_photo(cursor):
     """
     Parcours le dossier des photos et retourne les instructions
-    pour les incorporer dans la base de donnee
+    pour les incorporer dans la base de donnee.
     """
     # ## selection des ficher se terminant par ".jpg" ou ".JPG"
     verification = re.compile("([^\s]+(\.(?i)(jpg))$)")
@@ -86,6 +88,7 @@ def recursive_serie(avant, cursor, num):
     """
     Cree la liste des correspondances id_photo / num de serie
     """
+    print(avant)
     instruc = {
         "serie": [{"id": num, "camera": avant[1], "debut": avant[0]}],
         "photo": list()

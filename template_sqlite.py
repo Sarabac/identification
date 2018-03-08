@@ -4,7 +4,7 @@ Created on Tue Feb 13 08:16:45 2018
 
 @author: luxis
 """
-
+# construction des differentes tables de la base de donnee
 creation = """
 CREATE TABLE 'User' (
 'id_user' INTEGER,
@@ -80,25 +80,30 @@ FOREIGN KEY (fk_camera) REFERENCES Camera(id_camera)
 );
 """
 
+# son creer une nouvelle camera si une autre ne possede pas le meme nom
 create_camera = """
 INSERT OR IGNORE INTO Camera (marque, model) VALUES (:marque, :model);
 """
+# a partir des cameras, on associe les differentes photos qu'elle a produit
 create_photo = """
 INSERT INTO Photo (file, date, fk_camera) VALUES (:file, :date, (
 SELECT id_camera FROM Camera
 WHERE Camera.marque = :marque AND Camera.model = :model)
 );
 """
+# les nouvelles especes
 create_espece = """
 INSERT INTO Espece (nom_espece) VALUES (:espece);
 """
+# associe les differents caracteres aux especes
 create_caractere = """
 INSERT INTO Caractere (nom_caractere, fk_espece) VALUES (:nom, :espece);
 """
+# associe les differentes modalites aux caracteres
 create_modalite = """
 INSERT INTO Modalite (nom_modalite, fk_caractere) VALUES (:nom, :id_caractere);
 """
-
+# on associe apres coup chaque photo a une serie
 update_photo = """
 UPDATE Photo SET fk_serie = :serie WHERE id_photo = :id;
 """
