@@ -26,14 +26,15 @@ def lancer():
     # si elle n'existe pas, on l'initialise
     if first:
         gestion.init_base(cursor)
-        gestion.init_photo(cursor)
         gestion.init_especes(cursor)
-        gestion.init_serie(cursor)
-        # on enregistre les modifications
-        conn.commit()
+    gestion.init_photo(cursor)
+    gestion.init_serie(cursor)
+    # on enregistre les modifications
+    conn.commit()
 
     app = application(cursor, conn)
     app.run()
+
     # ne pas oublier de fermer la base
     conn.close()
     # #### Creation de l'application
@@ -64,8 +65,6 @@ def application(cursor, conn):
 
     @app.route("/enregistrer", methods=["POST"])
     def enregistrer():
-        print(request.get_data())
-        print(type(request.get_data()))
         donnees = json.loads(request.get_data())
         # de la forme : [{id_e: x, photos:[x,x,x], modalites:[x,x,x,x,x]}...]
         gestion.enregistrer_animaux(cursor, donnees)

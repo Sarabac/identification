@@ -1,17 +1,18 @@
 library("RSQLite")
-setwd("~/github/appli_chevreuil")
 
 #connection a la base de donnee
 cursor <- dbConnect(SQLite(), dbname="chevreuil.db")
 # requete
 
 select_modalites = function(espece){
-  individus = "SELECT fk_animal, date_debut FROM Serie
-INNER JOIN Photo ON id_serie=fk_photo
-INNER JOIN Pointer ON fk_photo=id_photo
-INNER JOIN Animal ON id_animal=fk_animal
-INNER JOIN Espece ON id_espece=fk_espece
-WHERE nom_espece='"
+  espece = "grenouille"
+  individus = "
+  SELECT DISTINCT fk_animal, date_debut from photo 
+  INNER JOIN pointer ON fk_photo=id_photo 
+  INNER JOIN Animal ON id_animal=fk_animal 
+  INNER JOIN Espece ON id_espece=fk_espece 
+  INNER JOIN Serie ON fk_serie=id_serie 
+  WHERE nom_espece='"
   indiv = dbGetQuery(cursor, paste(individus, espece, "'", sep=""))
   # selection des caractere des grenouilles
   select_caract = "SELECT nom_caractere FROM Caractere
@@ -23,7 +24,7 @@ WHERE nom_espece='"
   for (i in indiv$fk_animal){
     instructions = "
 SELECT nom_caractere, nom_modalite FROM Animal INNER JOIN Caracteriser ON fk_animal=id_animal
-INNER JOIN Modalite ON fk_modalite=id_modalite
+LEFT JOIN Modalite ON fk_modalite=id_modalite
 INNER JOIN Caractere ON fk_caractere=id_caractere
 WHERE id_animal="
     modalites = dbGetQuery(cursor, paste(instructions, i, sep=""))

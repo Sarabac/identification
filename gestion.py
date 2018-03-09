@@ -11,6 +11,7 @@ import sqlite3
 from PIL import Image
 import os
 import re
+import ipdb
 
 import especes
 import config
@@ -27,36 +28,62 @@ def init_base(cursor):
         cursor.execute(instr)
 
 
+def create_photo(cursor, dossier):
+    """
+    Insert les photos du dossier dans la base de donnee et cree la camera
+    correspondante si elle n'existe pas.
+    """
+    # si le dossier existe deja dans la base de donnee
+
+    cursor.execute(
+        "SELECT id_camera FROM Camera WHERE model=:dossier",
+        {"dossier": dossier}
+    )
+    try:
+        id_camera = cursor.fetchone()[0]
+    # sinon on cree la camera correspondante
+    except TypeError:
+        cam = {
+            'marque': "Camera",
+            'model': dossier,
+        }
+        cursor.execute(ts.create_camera, cam)
+        id_camera = cursor.lastrowid
+
+    verification = re.compile("([^\s]+(\.(?i)(jpg))$)")
+    cursor.execute(
+        "SELECT file FROM Photo WHERE fk_camera = :cam",
+        {"cam": id_camera}
+    )
+    deja_presente = [i[0].encode() for i in cursor.fetchall()]
+    noms = [nom for nom in os.listdir(os.path.join(config.photos, dossier))
+            if verification.search(nom) and os.path.join(dossier, nom) not in deja_presente]
+
+    ids_photo = list()
+    for nom in noms:
+        img = Image.open(os.path.join(config.photos, dossier, nom))
+        data = img._getexif()
+
+        infos = {
+            "id_camera": id_camera,
+            "file": os.path.join(dossier, nom),
+            # la date est transformee en objet datetime
+            "date": datetime.strptime(data[36867], '%Y:%m:%d %H:%M:%S')
+        }
+        cursor.execute(ts.create_photo, infos)
+        ids_photo.append(cursor.lastrowid)
+
+
 def init_photo(cursor):
     """
     Parcours le dossier des photos et retourne les instructions
     pour les incorporer dans la base de donnee.
     """
     # ## selection des ficher se terminant par ".jpg" ou ".JPG"
-    verification = re.compile("([^\s]+(\.(?i)(jpg))$)")
     dossiers = [nom for nom in os.listdir(config.photos)]
     # ## extraction des informations importantes
-    infos = list()
-    # changer pour "nom du fichier"
     for dossier in dossiers:
-        noms = [nom for nom in os.listdir(os.path.join(config.photos, dossier))
-                if verification.search(nom)]
-        for nom in noms:
-            img = Image.open(os.path.join(config.photos, dossier, nom))
-            data = img._getexif()
-            infos.append({
-                'file': os.path.join(dossier, nom),
-                'marque': data[271],
-                'model': dossier,
-                # la date est transformee en objet datetime
-                'date': datetime.strptime(data[36867], '%Y:%m:%d %H:%M:%S')
-
-            })
-    # ## insertion des informations dans les requetes sqlite
-    for data in infos:
-        cursor.execute(ts.create_camera, {
-                "marque": data['marque'], "model": data['model']})
-        cursor.execute(ts.create_photo, data)
+        create_photo(cursor, dossier)
 
 
 def init_especes(cursor):
@@ -88,7 +115,7 @@ def recursive_serie(avant, cursor, num):
     """
     Cree la liste des correspondances id_photo / num de serie
     """
-    print(avant)
+
     instruc = {
         "serie": [{"id": num, "camera": avant[1], "debut": avant[0]}],
         "photo": list()
@@ -112,10 +139,19 @@ def init_serie(cursor):
     """
     remplis la colonne serie de la table Photo
     """
+    # on selectionne les series d'avant
+    cursor.execute("SELECT id_serie FROM Serie")
+    old_serie = [i[0] for i in cursor.fetchall()]
+    if len(old_serie) == 0:
+        num = 1
+    else:
+        num = max(old_serie)+1
     cursor.execute(ts.select_date_photo)
-    instructions = recursive_serie(cursor.fetchone(), cursor, 1)
+    instructions = recursive_serie(cursor.fetchone(), cursor, num)
     cursor.executemany(ts.create_serie, instructions["serie"])
     cursor.executemany(ts.update_photo, instructions["photo"])
+    for s in old_serie:
+        cursor.execute("DELETE FROM Serie WHERE id_serie=:id", {"id": s})
 
 
 def affichage_series(cursor):
@@ -199,7 +235,6 @@ def charger(cursor, serie):
     cursor.execute(ts.extract_animal_serie, {"id_serie": serie})
     animaux = [i for i in cursor.fetchall()]
     result = list()
-    print("aniamux:",animaux)
     for id in animaux:
         cursor.execute(
             "SELECT fk_photo FROM Pointer WHERE fk_animal=?", id
@@ -218,7 +253,6 @@ def charger(cursor, serie):
             "photos": photos,
             "modalites": modalites
         })
-    print(result)
     return result
 
 if __name__ == "__main__":

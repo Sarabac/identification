@@ -86,10 +86,7 @@ INSERT OR IGNORE INTO Camera (marque, model) VALUES (:marque, :model);
 """
 # a partir des cameras, on associe les differentes photos qu'elle a produit
 create_photo = """
-INSERT INTO Photo (file, date, fk_camera) VALUES (:file, :date, (
-SELECT id_camera FROM Camera
-WHERE Camera.marque = :marque AND Camera.model = :model)
-);
+INSERT INTO Photo (file, date, fk_camera) VALUES (:file, :date, :id_camera);
 """
 # les nouvelles especes
 create_espece = """
@@ -123,8 +120,9 @@ INNER JOIN Camera ON Serie.fk_camera = Camera.id_camera;
 """
 
 select_photo = """
-SELECT id_photo, file FROM photo
-WHERE fk_serie = :id_serie;
+SELECT id_photo, file FROM Photo
+WHERE fk_serie = :id_serie
+ORDER BY datetime(date) DESC;
 """
 
 colonnes_distinctes = """
