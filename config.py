@@ -18,7 +18,7 @@ template = os.path.join("template")
 # ## interval maximum entre les photos pour former une serie
 # ## s'ecrit sous la forme timedelta(jours, secondes, microsecondes)
 # ## les microseconde sont inutiles
-interval_photo = timedelta(0, 60*5)
+interval_photo = timedelta(0, 60)
 
 # #### Ne pas changer ######
 detect_types = sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES

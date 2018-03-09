@@ -30,7 +30,7 @@ WHERE id_animal="
     modalites = dbGetQuery(cursor, paste(instructions, i, sep=""))
     indiv[indiv$fk_animal==i,modalites$nom_caractere] = modalites$nom_modalite
   }
-  return(indiv)
+  return(apply(indiv, 2, as.factor))
 }
 
 deconnection = function(){
