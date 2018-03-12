@@ -1,0 +1,51 @@
+---
+title: "Analyse des Caractères des grenouilles brunes"
+author: "Lucas Boutarfa"
+output:   pdf_document
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+---
+
+```{r include=FALSE}
+library("FactoMineR")
+library(readxl)
+setwd("~/Dropbox/Stage2A/amphibiens/Catalogue/identification")
+source("analyse.r")
+data = select_modalites("grenouille")
+qualitatif = data[,3:length(data[1,])]
+```
+#Introduction
+
+Observations des relevés sur les grenouilles brunes
+
+#Caractères observés
+L'alalyse a été faite sur la base des caractères suivants:
+Caractère      | Description
+---------      |-----------
+pelote nuptiale| couleur de la pelote, ou son abscence
+
+```{r echo=FALSE, fig.cap="effectif de chaque caractère"}
+description_caracteres <- read_excel("script_grenouilles/description_caracteres.xlsx")
+knitr::kable(description_caracteres, format = "markdown")
+summary(qualitatif)
+```
+
+
+
+```{r echo=FALSE}
+
+
+summary(data)
+res.mca = MCA(qualitatif)
+plotellipses(res.mca)
+```
+
+\newpage
+\blandscape
+#Annexe
+```{r echo=FALSE, fig.cap="Tableau des caractères des grenouilles observées"}
+knitr::kable(data, format = "markdown")
+```
+\elandscape
