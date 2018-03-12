@@ -12,19 +12,15 @@ Ne pas mettre d'espace entre les noms de caracteres et de modalites!
 Ne pas mettre de caracteres speciaux ni d'accents !
 """
 grenouille = {
-    "[couleur]ventre": ["blanc", "blanc_tachete_noir", "orange"],
-    "[couleur]Corps": ["brun-fonce", "brun-rouge", "noir", "vert"],
-    "[couleur]gorge": ["gris-fonce", "jaunatre", "verte", "blanche"],
-    "[pupilles]forme": ["ovales", "applaties"],
-    "[pupilles]lisere": ["large", "fin-abscent"],
-    "[tympan]diametre": ["inf_oeil", "eg_oeil"],
-    "[tympan]distance_oeil": ["1-2mm", "eloigne"],
-    "pelotes": ["grises", "noires", "brunes", "abscentes"],
-    "museau": ["pointu", "arrondis"],
-    "iridophores": ["fins", "grossiers"],
-    "Plis_dorso-latereaux": ["paralleles", "raproches"],
-    "peau": ["lisse", "granuleuse"],
-    "bande-supralabiale": ["abscente", "avant-oeil", "apres-oeil"],
+    "[couleur]ventre": ["blanc", "blanc_noir", "jaune-rouge", "blanc-vert"],
+    "[couleur]dos": ["brun", "roux", "noir", "vert"],
+    "[couleur]pelote": ["grise", "noire", "brune", "abscente"],
+    "[forme]pupille-lisere": ["ovale-large", "ovale-fin", "applatie-large", "applatie-fin"],
+    "[forme]tympan": ["inf_oeil-proche", "inf_oeil-eloigne", "eg_oeil-proche", "eg_oeil-eloigne"],
+    "[forme]plis_dorsaux": ["paralleles-proches", "paralleles-eloignes", "courbes-proches", "courbes-eloignes"],
+    "[forme]museau": ["court-arrondi", "long-arrondi", "court-pointu", "long-pointu"],
+    "[forme]iridophores": ["abscents",  "eparses", "grossiers", "denses"],
+    "[forme]bande-supralabiale": ["abscente", "avant-oeil", "apres-oeil", "sous-oeil"],
 }
 chevreuil = {
     "bois": ["abscents", "droit", "gauches", "les_deux"],
