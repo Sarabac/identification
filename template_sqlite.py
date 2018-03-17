@@ -115,8 +115,15 @@ VALUES (:id, :camera, :debut, :fin);
 """
 
 select_serie = """
-SELECT id_serie, model , date_debut, date_fin FROM Serie
+SELECT Serie.id_serie, Camera.model ,
+Serie.date_debut, Serie.date_fin FROM Serie
 INNER JOIN Camera ON Serie.fk_camera = Camera.id_camera;
+"""
+nb_animaux = """
+SELECT COUNT(Pointer.fk_photo) FROM Serie
+INNER JOIN Photo ON Photo.fk_serie = Serie.id_serie
+INNER JOIN Pointer ON Photo.id_photo = Pointer.fk_photo
+WHERE Serie.id_serie = :id;
 """
 
 select_photo = """

@@ -1,51 +1,126 @@
 ---
 title: "Analyse des Caractères des grenouilles brunes"
 author: "Lucas Boutarfa"
-output:   pdf_document
+date: "`r Sys.Date()`"
+fontsize: 24pt
+output:
+  pdf_document:
+    fig_caption: true
 header-includes:
 - \usepackage{pdflscape}
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
+- \usepackage{graphicx}
+- \usepackage{rotating}
+
 ---
 
-```{r include=FALSE}
+
+```{r setup, include=FALSE}
 library("FactoMineR")
-library(readxl)
-setwd("~/Dropbox/Stage2A/amphibiens/Catalogue/identification")
-source("analyse.r")
-data = select_modalites("grenouille")
-qualitatif = data[,3:length(data[1,])]
+library("readxl")
+library("knitr")
+library("pander")
+
+#setwd("~/Dropbox/Stage2A/amphibiens/Catalogue/identification")
+source("../analyse.r")
+
+panderOptions('table.split.table', Inf)
+#panderOptions('table.style', "grid")
+
+retire_crochets = function(chaine){
+  set = unlist( strsplit(chaine, "\\]"))
+  return(set[length(set)])
+}
+
+jour = function(date){
+  #transforme la date complete en date du jour
+  sep = unlist( strsplit(date, " "))
+  return(sep[1])
+}
+
+affiche_grenouille = function(im){
+  
+for(i in c(1,2,3,4)){#unique(im)){
+  count = 0
+  cat("\\begin{figure}")
+  for(adresse in im[im[,1]==i, 2]){
+    count = count + 1
+    chemin = paste("../static/photos", adresse, sep = "/")
+    cat(paste("\\includegraphics[width=0.5\\textwidth]{", chemin, "}", sep=""))
+    if(count%%2 == 0){
+      #cat("\\newline")
+    }
+  }
+  cat("\\caption{Entitaten zur Persistierung der Special Notifications}")
+  cat("\\end{figure}")
+}
+}
+
+# extraction des donnees
+donn = select_modalites("grenouille")
+colnames(donn) <- apply(array(colnames(donn)), 1, retire_crochets)
+donn[,"Date"] = apply(array(donn[,"Date"]),1, jour )
+qualitatif = na.exclude( donn[,2:length(donn[1,])])
+
+
 ```
 #Introduction
 
 Observations des relevés sur les grenouilles brunes
 
 #Caractères observés
-L'alalyse a été faite sur la base des caractères suivants:
-Caractère      | Description
----------      |-----------
-pelote nuptiale| couleur de la pelote, ou son abscence
-
-```{r echo=FALSE, fig.cap="effectif de chaque caractère"}
-description_caracteres <- read_excel("script_grenouilles/description_caracteres.xlsx")
-knitr::kable(description_caracteres, format = "markdown")
-summary(qualitatif)
-```
-
-
+L'analyse a été faite sur la base de 8 caractères, chacun possédant 4 modalités.
 
 ```{r echo=FALSE}
+description_caracteres <- read_excel("description_caracteres.xlsx")
+pander(description_caracteres, caption = "description des différents caractères étudiés")
+```
 
+Les effectifs des caractères mesuré sur `r length(donn[,1])` grenouilles sont les suivants:
 
-summary(data)
-res.mca = MCA(qualitatif)
+```{r echo=FALSE, include=FALSE}
+sommaire = summary(qualitatif)
+```
+```{r echo=FALSE, fig.cap="effectif de chaque caractère"}
+pander(sommaire, caption = "effectif de chaque caractère")
+```
+
+#Analyse multiple des correspondances
+
+```{r echo=FALSE, include=FALSE}
+femelles = which(qualitatif[,"pelote"] == "abscente")
+```
+
+```{r results='asis', echo=FALSE}
+n = colnames(qualitatif)
+quali.sup = which((n=="pelote"))
+res.mca = MCA(qualitatif, quali.sup = quali.sup, graph = FALSE)
+plot.MCA(res.mca, choix = c("var"), select = "contrib 4")
+plot.MCA(res.mca, choix = c("ind"), invisible = c("var", "quali.sup"), select = "contrib 6")
+barplot(res.mca$eig[,2], main="pourcentage de variance pour chaque dimension")
+cat("\\newline")
 plotellipses(res.mca)
+
 ```
 
 \newpage
 \blandscape
-#Annexe
-```{r echo=FALSE, fig.cap="Tableau des caractères des grenouilles observées"}
-knitr::kable(data, format = "markdown")
+
+#Annexes
+
+
+
+```{r echo=FALSE}
+pander(donn, caption = "Tableau des caractères des grenouilles observées")
 ```
+
+##Photographies des differentes grenouilles
+```{r results='asis', echo=FALSE}
+#affiche_grenouille(liste_images("grenouille"))
+
+```
+
+
+
 \elandscape

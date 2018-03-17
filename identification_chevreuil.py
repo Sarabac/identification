@@ -8,9 +8,7 @@ import config
 import gestion
 from flask import Flask, render_template, request, jsonify
 import json
-
-# a retirer
-from especes import chevreuil
+import webbrowser
 
 # #### Creation de la base de donnee
 
@@ -27,6 +25,8 @@ def lancer():
     if first:
         gestion.init_base(cursor)
         gestion.init_especes(cursor)
+    # on reinitialise a chaque fois les photos et series
+    # pour integrer d'eventuelles nouvelles photos
     gestion.init_photo(cursor)
     gestion.init_serie(cursor)
     # on enregistre les modifications
@@ -44,9 +44,6 @@ def application(cursor, conn):
     app = Flask(__name__)
 
     @app.route('/')
-    def hello_world():
-        return "Hello World"
-
     @app.route("/series")
     def liste_series():
         a_afficher = gestion.affichage_series(cursor)
@@ -70,6 +67,8 @@ def application(cursor, conn):
         gestion.enregistrer_animaux(cursor, donnees)
         conn.commit()
         return jsonify(status="ok")
+
+    webbrowser.open("http://127.0.0.1:5000/")
 
     return app
 

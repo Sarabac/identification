@@ -69,7 +69,12 @@ table td a{
 a p{
     border: solid;
     text-align: center;
-    color: #000D71
+    color: #000D71;
+    border-color: red
+}
+
+a[data-animaux = "0"] p{
+    border-color: blue
 }
 
 a p:hover{

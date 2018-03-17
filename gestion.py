@@ -155,20 +155,32 @@ def init_serie(cursor):
 
 
 def affichage_series(cursor):
+    """
+    Permet de fournir les variables qui permettent l'affichage des series.
+    """
     cursor.execute(ts.select_serie)
     a_afficher = dict()
+
     series = [i for i in cursor.fetchall()]
+    # serie = [id, camera, debut, fin, nombre d'animaux deja present]
+    # liste des cameras
     a_afficher["cameras"] = sorted(list(set([s[1] for s in series])))
+    # liste des dates
     a_afficher["dates"] = sorted(list(set([str(s[2].date()) for s in series])))
+    # chaque serie a une coordonnee date/camera
     a_afficher["cellules"] = dict()
     for coord in itertools.product(a_afficher["dates"], a_afficher["cameras"]):
         a_afficher["cellules"][coord] = list()
         for s in series:
             if s[1] == coord[1] and str(s[2].date()) == coord[0]:
+                # on extrait le nombre d'animaux deja present
+                # dans chaque serie
+                cursor.execute(ts.nb_animaux, {"id": s[0]})
                 a_afficher["cellules"][coord].append({
                     "id": s[0],
                     "debut": str(s[2].time()),
-                    "fin": str(s[3].time())
+                    "fin": str(s[3].time()),
+                    "nb_animaux": cursor.fetchone()[0]
                     })
     return a_afficher
 
@@ -187,6 +199,10 @@ def affichage_photos(cursor, id_serie):
 
 
 def definition_html(cursor):
+    """
+    Permet de construire les formulaire de definition d'un animal
+    pour chaque espece.
+    """
     result = dict()
 
     cursor.execute("SELECT id_espece, nom_espece FROM Espece;")
@@ -232,18 +248,25 @@ def enregistrer_animaux(cursor, animaux):
 
 
 def charger(cursor, serie):
+    """
+    Renvoie la liste qui permet de caracteriser in animal avec les
+    id de l'espece, des modalites, des photos liees a cet animal
+    """
     cursor.execute(ts.extract_animal_serie, {"id_serie": serie})
     animaux = [i for i in cursor.fetchall()]
     result = list()
     for id in animaux:
+        # les photos
         cursor.execute(
             "SELECT fk_photo FROM Pointer WHERE fk_animal=?", id
         )
         photos = [i[0] for i in cursor.fetchall()]
+        # les modalites
         cursor.execute(
             "SELECT fk_modalite FROM Caracteriser WHERE fk_animal=?", id
         )
         modalites = [i[0] for i in cursor.fetchall()]
+        # l'espece
         cursor.execute(
             "SELECT fk_espece FROM Animal WHERE id_animal=?", id
         )
@@ -258,7 +281,6 @@ def charger(cursor, serie):
 if __name__ == "__main__":
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
-
 
     print(charger(cursor, 1))
 

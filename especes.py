@@ -52,3 +52,8 @@ rien = {
 chat = {
     "variete": ["sauvage", "domestique"]
 }
+
+photo = {
+    "qualite": ["flou", "loin", "hors-champ", "cache"],
+    "best-of": ["oui", "non"]
+}

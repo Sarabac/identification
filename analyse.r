@@ -1,13 +1,12 @@
 library("RSQLite")
-
+setwd("~/Dropbox/Stage2A/amphibiens/Catalogue/identification")
 #connection a la base de donnee
 cursor <- dbConnect(SQLite(), dbname="chevreuil.db")
 # requete
-
+print(getwd())
 select_modalites = function(espece){
-  espece = "grenouille"
   individus = "
-  SELECT DISTINCT fk_animal, date_debut from photo 
+  SELECT DISTINCT fk_animal, date_debut FROM photo 
   INNER JOIN pointer ON fk_photo=id_photo 
   INNER JOIN Animal ON id_animal=fk_animal 
   INNER JOIN Espece ON id_espece=fk_espece 
@@ -31,7 +30,23 @@ WHERE id_animal="
     indiv[indiv$fk_animal==i,modalites$nom_caractere] = modalites$nom_modalite
   }
   
-  return(apply(indiv, 2, as.factor))
+  donnees = apply(indiv, 2, as.factor)
+  noms_colonne = colnames(donnees)
+  noms_colonne[2] = "Date"
+  colnames(donnees) <- noms_colonne
+  donnees = donnees[,-1]
+  return(donnees)
+}
+
+liste_images = function(espece){
+  
+  individus = "Select id_animal, file FROM Photo 
+  INNER JOIN Pointer ON id_photo = fk_photo
+  INNER JOIN Animal ON id_animal = fk_animal
+  INNER JOIN Espece ON id_espece = fk_espece
+  WHERE nom_espece='"
+  indiv = dbGetQuery(cursor, paste(individus, espece, "'", sep=""))
+  return(indiv)
 }
 
 deconnection = function(){
