@@ -11,11 +11,12 @@ import sqlite3
 from PIL import Image
 import os
 import re
-import ipdb
 
 import especes
 import config
 import template_sqlite as ts
+
+import pdb #debugger
 
 
 def init_base(cursor):
@@ -193,7 +194,7 @@ def affichage_photos(cursor, id_serie):
     for id, chem in cursor.fetchall():
         affichage["photos"].append((
             int(id),
-            os.path.join(config.photos, chem.encode())
+            os.path.join(config.photos, chem)
         ))
     return affichage
 
