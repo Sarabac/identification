@@ -9,7 +9,7 @@ import gestion
 from flask import Flask, render_template, request, jsonify
 import json
 import webbrowser
-
+import pdb
 # #### Creation de la base de donnee
 
 def create_conn():
@@ -70,7 +70,7 @@ def application(cursor, conn):
     @app.route("/enregistrer", methods=["POST"])
     def enregistrer():
         cursor, conn = create_conn()
-        donnees = json.loads(request.get_data())
+        donnees = json.loads(request.get_data().decode())
         # de la forme : [{id_e: x, photos:[x,x,x], modalites:[x,x,x,x,x]}...]
         gestion.enregistrer_animaux(cursor, donnees)
         conn.commit()

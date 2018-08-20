@@ -56,7 +56,7 @@ def create_photo(cursor, dossier):
         "SELECT file FROM Photo WHERE fk_camera = :cam",
         {"cam": id_camera}
     )
-    deja_presente = [i[0].encode() for i in cursor.fetchall()]
+    deja_presente = [i[0] for i in cursor.fetchall()]
     noms = [nom for nom in os.listdir(os.path.join(config.photos, dossier))
             if verification.search(nom) and os.path.join(dossier, nom) not in deja_presente]
 
