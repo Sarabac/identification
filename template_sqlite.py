@@ -169,3 +169,11 @@ caracteriser = """
 INSERT INTO Caracteriser(fk_modalite, fk_animal)
 VALUES (:fk_modalite, :fk_animal);
 """
+
+espece_on_photo = """
+SELECT Camera.model, Espece.nom_espece, Photo.file FROM Camera
+INNER Join Photo On id_camera=fk_camera
+INNER JOIN Pointer On id_photo=fk_photo
+INNER JOIN Animal On id_animal=fk_animal
+INNER JOIN Espece On id_espece=fk_espece
+"""

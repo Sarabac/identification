@@ -49,6 +49,10 @@ rien = {
 
 }
 
+humain = {
+
+}
+
 chat = {
     "variete": ["sauvage", "domestique"]
 }
