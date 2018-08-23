@@ -9,8 +9,13 @@ import gestion
 from flask import Flask, render_template, request, jsonify
 import json
 import webbrowser
-
+import pdb
 # #### Creation de la base de donnee
+
+def create_conn():
+    conn = sqlite3.connect(config.base, detect_types=config.detect_types)
+    cursor = conn.cursor()
+    return (cursor,conn)
 
 
 def lancer():
@@ -46,11 +51,13 @@ def application(cursor, conn):
     @app.route('/')
     @app.route("/series")
     def liste_series():
+        cursor, conn = create_conn()
         a_afficher = gestion.affichage_series(cursor)
         return render_template("series.html.j2", **a_afficher)
 
     @app.route("/serie/<int:id_serie>")
     def etude_series(id_serie):
+        cursor, conn = create_conn()
         ficher = gestion.affichage_photos(cursor, id_serie)
         definition = gestion.definition_html(cursor)
         param = dict(ficher, serie=id_serie, **definition)
@@ -62,7 +69,8 @@ def application(cursor, conn):
 
     @app.route("/enregistrer", methods=["POST"])
     def enregistrer():
-        donnees = json.loads(request.get_data())
+        cursor, conn = create_conn()
+        donnees = json.loads(request.get_data().decode())
         # de la forme : [{id_e: x, photos:[x,x,x], modalites:[x,x,x,x,x]}...]
         gestion.enregistrer_animaux(cursor, donnees)
         conn.commit()
