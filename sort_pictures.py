@@ -6,6 +6,7 @@ import config
 import template_sqlite
 import os
 import shutil
+import re
 
 
 def trier(data):
@@ -17,7 +18,7 @@ def trier(data):
         "Roe deers": list(), "Humans": list(),
         "Other species": list(), "Nothing": list()
     }, "Video": list()} for d in data}
-    print(tree)
+    
     correspondance = {
         "rien": "Nothing",
         "chevreuil": "Roe deers",
@@ -26,6 +27,13 @@ def trier(data):
     for d in data:
         t = tree[d[0]]["Pictures"][correspondance.get(d[1], "Other species")]
         t.append(d[2])
+    # ## add videos
+    for cam in tree.keys():
+        verification = re.compile("([^\s]+(\.(?i)(MP4))$)")
+        videos = [nom for nom in os.listdir(os.path.join(config.photos, cam))
+            if verification.search(nom)]
+        for v in videos:
+            tree[cam]["Video"].append(os.path.join(cam, v))
     return tree
 
 
@@ -44,7 +52,6 @@ def copy_file(path, name):
 
 def create_tree(data, root="", name="sorted"):
     path = create_folder(root, name)
-    print(path, data)
     if type(data) is list:
         for d in data:
             copy_file(path, d)
@@ -53,8 +60,13 @@ def create_tree(data, root="", name="sorted"):
             create_tree(data[k], path, k)
 
 
-conn = sqlite3.connect(config.base, detect_types=config.detect_types)
-cursor = conn.cursor()
+def run ():
+    conn = sqlite3.connect(config.base, detect_types=config.detect_types)
+    cursor = conn.cursor()
+    result = cursor.execute(template_sqlite.espece_on_photo).fetchall()
+    trier(result)
+    create_tree(trier(result))
 
-result = cursor.execute(template_sqlite.espece_on_photo)
-create_tree(trier(result.fetchall()))
+
+if __name__ == "__main__":
+    run()
