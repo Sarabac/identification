@@ -61,7 +61,11 @@ def create_photo(cursor, dossier):
             if verification.search(nom) and os.path.join(dossier, nom) not in deja_presente]
 
     ids_photo = list()
+    # compteur de chargement
+    total = len(noms)
+    i = 0
     for nom in noms:
+        print("creation base photo: {}/{}".format(i, total))
         img = Image.open(os.path.join(config.photos, dossier, nom))
         data = img._getexif()
 
@@ -73,6 +77,8 @@ def create_photo(cursor, dossier):
         }
         cursor.execute(ts.create_photo, infos)
         ids_photo.append(cursor.lastrowid)
+        i += 1
+
 
 
 def init_photo(cursor):
