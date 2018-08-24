@@ -15,7 +15,7 @@ import pdb
 def create_conn():
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
-    return (cursor,conn)
+    return (cursor, conn)
 
 
 def lancer():
@@ -33,6 +33,7 @@ def lancer():
     # on reinitialise a chaque fois les photos et series
     # pour integrer d'eventuelles nouvelles photos
     gestion.init_photo(cursor)
+    conn.commit()
     gestion.init_serie(cursor)
     # on enregistre les modifications
     conn.commit()

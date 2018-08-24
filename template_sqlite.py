@@ -108,10 +108,14 @@ UPDATE Photo SET fk_serie = :serie WHERE id_photo = :id;
 select_date_photo = """
 SELECT date, fk_camera, id_photo FROM Photo ORDER BY fk_camera, date;
 """
+select_date_photo_camera = """
+SELECT date, id_photo FROM Photo WHERE fk_camera = :id_camera
+ORDER BY date;
+"""
 
 create_serie = """
-INSERT INTO 	Serie(id_serie, fk_camera, date_debut, date_fin)
-VALUES (:id, :camera, :debut, :fin);
+INSERT INTO 	Serie(fk_camera, date_debut, date_fin)
+VALUES (:camera, :debut, :fin);
 """
 
 select_serie = """

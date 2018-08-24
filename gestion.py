@@ -8,6 +8,7 @@ Created on Mon Feb 12 21:54:03 2018
 from datetime import datetime
 import itertools
 import sqlite3
+# package pillow
 from PIL import Image
 import os
 import re
@@ -16,7 +17,6 @@ import especes
 import config
 import template_sqlite as ts
 
-import pdb #debugger
 
 
 def init_base(cursor):
@@ -62,10 +62,8 @@ def create_photo(cursor, dossier):
 
     ids_photo = list()
     # compteur de chargement
-    total = len(noms)
-    i = 0
+
     for nom in noms:
-        print("creation base photo: {}/{}".format(i, total))
         img = Image.open(os.path.join(config.photos, dossier, nom))
         data = img._getexif()
 
@@ -77,7 +75,6 @@ def create_photo(cursor, dossier):
         }
         cursor.execute(ts.create_photo, infos)
         ids_photo.append(cursor.lastrowid)
-        i += 1
 
 
 
@@ -89,8 +86,12 @@ def init_photo(cursor):
     # ## selection des ficher se terminant par ".jpg" ou ".JPG"
     dossiers = [nom for nom in os.listdir(config.photos)]
     # ## extraction des informations importantes
+    total = len(dossiers)
+    i = 0
     for dossier in dossiers:
+        print("creation base photo: {}/{}".format(i, total))
         create_photo(cursor, dossier)
+        i += 1
 
 
 def init_especes(cursor):
@@ -118,47 +119,45 @@ def init_especes(cursor):
                 )
 
 
-def recursive_serie(avant, cursor, num):
-    """
-    Cree la liste des correspondances id_photo / num de serie
-    """
-
-    instruc = {
-        "serie": [{"id": num, "camera": avant[1], "debut": avant[0]}],
-        "photo": list()
-        }
-    while True:
-        instruc["photo"].append({"serie": num, "id": avant[2]})
-        instruc["serie"][0]["fin"] = avant[0]
-        apres = cursor.fetchone()
-        if apres is None:
-            return instruc
-        elif (apres[0]-avant[0] > config.interval_photo) or (avant[1] != apres[1]):
-            nouvelles = recursive_serie(apres, cursor, num+1)
-            instruc["serie"] += nouvelles["serie"]
-            instruc["photo"] += nouvelles["photo"]
-            return instruc
-        else:
-            avant = apres
-
-
 def init_serie(cursor):
     """
     remplis la colonne serie de la table Photo
     """
-    # on selectionne les series d'avant
-    cursor.execute("SELECT id_serie FROM Serie")
-    old_serie = [i[0] for i in cursor.fetchall()]
-    if len(old_serie) == 0:
-        num = 1
-    else:
-        num = max(old_serie)+1
-    cursor.execute(ts.select_date_photo)
-    instructions = recursive_serie(cursor.fetchone(), cursor, num)
-    cursor.executemany(ts.create_serie, instructions["serie"])
-    cursor.executemany(ts.update_photo, instructions["photo"])
-    for s in old_serie:
-        cursor.execute("DELETE FROM Serie WHERE id_serie=:id", {"id": s})
+
+    # on selectionne les cameras qui ont de nouvelles photos
+    cursor.execute("SELECT fk_serie, fk_camera From Photo")
+    result = cursor.fetchall()
+    cameras = {i[1] for i in result if i[0] is None}
+    print(cameras)
+    #infos sur l'avancement
+    total = len(cameras)
+    state = 0
+    for cam in cameras:
+        print("Create series: {}/{}".format(state, total))
+        state += 1
+        # On detruit toutes les serie de la camera
+        if cam in cursor.execute("SELECT fk_camera FROM Serie").fetchall():
+            cursor.execute("DELETE FROM Serie WHERE fk_camera=:cam", {"cam": cam})
+        # On recupere date, id_photo dans l'ordre chronologique
+        photo = cursor.execute(ts.select_date_photo_camera, {"id_camera": cam}).fetchall()
+        serie = [photo[0]]
+        list_serie = [serie]
+        for i in range(1, len(photo)):
+            pic = photo[i]
+            if (pic[0]-serie[-1][0] > config.interval_photo) or (i == len(photo)-1):
+                serie = list()
+                list_serie.append(serie)
+            serie.append(pic)
+
+            for serie in list_serie:
+                cursor.execute(ts.create_serie, {
+                    "camera": cam, "debut": serie[0][0], "fin": serie[-1][0]
+                })
+
+                id_s = cursor.lastrowid
+                for date, id_p in serie:
+                    cursor.execute(ts.update_photo, {"serie": id_s, "id": id_s})
+
 
 
 def affichage_series(cursor):
