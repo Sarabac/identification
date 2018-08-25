@@ -27,7 +27,7 @@ chevreuil = {
     "bois": ["abscents", "droit", "gauches", "deux", "trois_droit", "trois_gauche"],
     "cors-droit": [0, 1, 2, 3, 4],
     "cors-gauche": [0, 1, 2, 3, 4],
-    "hauteur": ["<oreille", ">oreille"],
+    "hauteur": ["inf_oreille", "sup_oreille"],
     "fourche": ["ouverte", "fermee"]
 }
 

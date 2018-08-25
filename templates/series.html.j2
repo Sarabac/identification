@@ -1,4 +1,11 @@
 {% extends "layout.html.j2" %}
+
+
+{% block script %}
+<script>$(function(){$("nav").hide()})</script>
+{% endblock %}
+
+
 {% block main %}
 
 {# series contient des listes de id, camera, date_debut, heure_debut, heure_fin #}
@@ -30,5 +37,4 @@
   {%endfor%}
 
 </table>
-
 {% endblock %}
