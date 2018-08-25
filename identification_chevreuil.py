@@ -22,8 +22,7 @@ def lancer():
     # on verifie si la base n'existe pas deja
     first = not os.access(config.base, os.R_OK)
 
-    conn = sqlite3.connect(config.base, detect_types=config.detect_types)
-    cursor = conn.cursor()
+    cursor, conn = create_conn()
     cursor.execute("""PRAGMA foreign_keys = ON""")
 
     # si elle n'existe pas, on l'initialise
@@ -83,3 +82,16 @@ def application(cursor, conn):
 
 if __name__ == "__main__":
     lancer()
+
+test = False
+if test == True:
+    cursor, conn = create_conn()
+    p = cursor.execute("SELECT fk_serie FROM Photo").fetchall()
+
+    u = [i[0] for i in p]
+    o = [u.count(i) for i in u]
+    len(o)
+    len(u)
+
+    t = cursor.execute("SELECT fk_camera FROM Serie").fetchall()
+    len(t)

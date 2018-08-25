@@ -125,6 +125,7 @@ def init_serie(cursor):
     """
 
     # on selectionne les cameras qui ont de nouvelles photos
+
     cursor.execute("SELECT fk_serie, fk_camera From Photo")
     result = cursor.fetchall()
     cameras = {i[1] for i in result if i[0] is None}
@@ -132,31 +133,32 @@ def init_serie(cursor):
     #infos sur l'avancement
     total = len(cameras)
     state = 0
-    for cam in cameras:
+    for cam in list(cameras):
         print("Create series: {}/{}".format(state, total))
         state += 1
         # On detruit toutes les serie de la camera
         if cam in cursor.execute("SELECT fk_camera FROM Serie").fetchall():
+            print("deletion cam: {}".format(cam))
             cursor.execute("DELETE FROM Serie WHERE fk_camera=:cam", {"cam": cam})
         # On recupere date, id_photo dans l'ordre chronologique
-        photo = cursor.execute(ts.select_date_photo_camera, {"id_camera": cam}).fetchall()
-        serie = [photo[0]]
-        list_serie = [serie]
+        cursor.execute(ts.select_date_photo_camera, {"id_camera": cam})
+        photo = cursor.fetchall()
+
+        list_serie = [[photo[0]]]
         for i in range(1, len(photo)):
             pic = photo[i]
-            if (pic[0]-serie[-1][0] > config.interval_photo) or (i == len(photo)-1):
-                serie = list()
-                list_serie.append(serie)
-            serie.append(pic)
+            if (pic[0]-list_serie[-1][-1][0] > config.interval_photo):
+                list_serie.append(list())
+            list_serie[-1].append(pic)
 
-            for serie in list_serie:
-                cursor.execute(ts.create_serie, {
-                    "camera": cam, "debut": serie[0][0], "fin": serie[-1][0]
-                })
+        for serie in list_serie:
+            cursor.execute(ts.create_serie, {
+                "camera": cam, "debut": serie[0][0], "fin": serie[-1][0]
+            })
 
-                id_s = cursor.lastrowid
-                for date, id_p in serie:
-                    cursor.execute(ts.update_photo, {"serie": id_s, "id": id_s})
+            id_s = cursor.lastrowid
+            for date, id_p in serie:
+                cursor.execute(ts.update_photo, {"serie": id_s, "id": id_p})
 
 
 
