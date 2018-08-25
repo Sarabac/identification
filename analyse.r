@@ -1,5 +1,9 @@
 library("RSQLite")
-setwd("~/Dropbox/Stage2A/amphibiens/Catalogue/identification")
+
+# the following line is for getting the path of your current open file
+current_path <- rstudioapi::getActiveDocumentContext()$path 
+# The next line set the working directory to the relevant one:
+setwd(dirname(current_path ))
 #connection a la base de donnee
 cursor <- dbConnect(SQLite(), dbname="chevreuil.db")
 # requete
