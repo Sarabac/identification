@@ -24,8 +24,9 @@
       {%for cam in cameras%}
         <td>
           {%for serie in cellules[(date, cam)]%}
-            <a class = "serie" href = {{ url_for('etude_series', id_serie = serie["id"]) }}
-            data-animaux = {{serie["nb_animaux"]}}>
+            <a class = "serie" href = {{ url_for('etude_series', id_serie = serie["id"])  }}
+              data-animaux = {{serie["nb_animaux"]}}
+              id = {{serie["id"]}}>
               <p>
                 {{serie["debut"]}}<br/>{{serie["fin"]}}
               </p>

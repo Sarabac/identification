@@ -30,17 +30,18 @@ enregistrer = function(){
   id_serie = $("#principale").data("serie")
   donnees = JSON.stringify( {"individus": individus, "serie": id_serie} )
   path = '/enregistrer' + "/" + id_serie
+  retour = '/series#' + id_serie
+
   $.ajax({
     url: path,
     type: "POST",
-    success: function(rep){
-      console.log("coucou")
-      $(location).attr("href",'/series')
-    },
+    success: function(rep){$(location).attr("href", retour)},
     error: function(err){console.log(err)},
     data: donnees,
     dataType: "text"
   })
+
+
 }
 
 clic_sur_creation = function(){
