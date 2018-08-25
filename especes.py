@@ -22,10 +22,17 @@ grenouille = {
     "[forme]iridophores": ["abscents",  "eparses", "grossiers", "denses"],
     "[forme]bande-supralabiale": ["abscente", "avant-oeil", "apres-oeil", "sous-oeil"],
 }
+
 chevreuil = {
-    "bois": ["abscents", "droit", "gauches", "les_deux"],
-    "cors-droit": [0, 1, 2, 3, 4, 5, 6, 7, 8],
-    "cors-gauche": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    "bois": ["abscents", "droit", "gauches", "deux", "trois_droit", "trois_gauche"],
+    "cors-droit": [0, 1, 2, 3, 4],
+    "cors-gauche": [0, 1, 2, 3, 4],
+    "hauteur": ["inf_oreille", "sup_oreille"],
+    "fourche": ["ouverte", "fermee"]
+}
+
+cerf = {
+    "sexe": ["male", "femelle"]
 }
 
 sanglier = {
@@ -37,6 +44,15 @@ renard = {
     "morpho": ["gros", "petit"]
 }
 
+
+chat = {
+    "variete": ["sauvage", "domestique"]
+}
+
+loutre = {
+
+}
+
 lievre = {
 
 }
@@ -45,19 +61,23 @@ blaireau = {
 
 }
 
-rien = {
+oiseau = {
 
+}
+
+autre = {
+
+}
+
+rien = {
+    "raison": ["vide", "cache", "flou"]
 }
 
 humain = {
 
 }
 
-chat = {
-    "variete": ["sauvage", "domestique"]
-}
 
-photo = {
-    "qualite": ["flou", "loin", "hors-champ", "cache"],
-    "best-of": ["oui", "non"]
+best_of = {
+
 }

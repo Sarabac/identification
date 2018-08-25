@@ -1,9 +1,9 @@
 
 remplir_creation = function(){
-  $("header").append($("<select id='creation'></select>"))
+  $("header").append($("<div id='creation'></div>"))
   $("#definition fieldset").each(function(){
     var esp = $(this).attr("class")
-    var opt = $("<option></option>")
+    var opt = $("<button></button>")
     opt.text(esp)
     opt.addClass(esp)
     $("#creation").append(opt)
@@ -29,21 +29,26 @@ enregistrer = function(){
   })
   id_serie = $("#principale").data("serie")
   donnees = JSON.stringify( {"individus": individus, "serie": id_serie} )
-  console.log(donnees)
+  path = '/enregistrer' + "/" + id_serie
+  retour = '/series#' + id_serie
+
   $.ajax({
-    url: '/enregistrer',
+    url: path,
     type: "POST",
-    success: function(rep){console.log(rep)},
+    success: function(rep){$(location).attr("href", retour)},
     error: function(err){console.log(err)},
     data: donnees,
     dataType: "text"
   })
+
+
 }
 
 clic_sur_creation = function(){
   var esp = $(this).attr("class")
   var nouveau = $("#definition fieldset."+esp).clone().prependTo("#animaux")
-  //nouveau.find("input:checkbox").prop("checked", true)
+  console.log(nouveau);
+  nouveau.find("input:checkbox").prop('checked', true).trigger("click").prop('checked', true)
 }
 
 chargement = function(){
@@ -83,10 +88,11 @@ clic_sur_miniature = function(){
 click_check = function(self){
   field = $(self).parent().parent()
   photos = field.data("photos")
-  console.log(photos)
   id_photo = $("nav .select").data("num")
   if ($(self).is(":checked")){
-    if (!(photos.includes(id_photo))){photos.push(id_photo)}
+    if (!(photos.includes(id_photo))){
+      photos.push(id_photo)
+    }
   }else{
     if (photos.includes(id_photo)){
       index = photos.indexOf(id_photo)
@@ -96,12 +102,24 @@ click_check = function(self){
   field.data("photos", photos)
 }
 
+shortcut = function(){
+  $(document).keydown(function(e) {
+    var t = String.fromCharCode(e.which)
+    console.log(t)
+    if (t == "W"){enregistrer()}
+    if (t == "D"){$(".check_animal").prop('checked', true).trigger("click").prop('checked', true)}
+    if (t == "A"){$(".check_animal").prop('checked', false).trigger("click").prop('checked', false)}
+  })
+}
+
 $(function(){
   remplir_creation()
-  $("#creation option").on("click", clic_sur_creation)
+  $("#creation button").on("click", clic_sur_creation)
   wheelzoom(document.querySelectorAll("#principale"))
   $(".photo").on("click", clic_sur_miniature)
   $($(".photo")[0]).trigger("click")
 
   chargement()
+
+  shortcut()
 })

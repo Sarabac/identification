@@ -108,10 +108,14 @@ UPDATE Photo SET fk_serie = :serie WHERE id_photo = :id;
 select_date_photo = """
 SELECT date, fk_camera, id_photo FROM Photo ORDER BY fk_camera, date;
 """
+select_date_photo_camera = """
+SELECT date, id_photo FROM Photo WHERE fk_camera = :id_camera
+ORDER BY date;
+"""
 
 create_serie = """
-INSERT INTO 	Serie(id_serie, fk_camera, date_debut, date_fin)
-VALUES (:id, :camera, :debut, :fin);
+INSERT INTO 	Serie(fk_camera, date_debut, date_fin)
+VALUES (:camera, :debut, :fin);
 """
 
 select_serie = """
@@ -151,6 +155,14 @@ SELECT DISTINCT fk_animal FROM Pointer INNER JOIN Photo ON fk_photo = id_photo
 INNER JOIN Serie ON fk_serie = :id_serie
 );
 """
+
+detruire_pointer_sur_photo = """
+DELETE FROM Pointer WHERE fk_animal IN (
+SELECT DISTINCT fk_animal FROM Pointer INNER JOIN Photo ON fk_photo = id_photo
+INNER JOIN Serie ON fk_serie = :id_serie
+);
+"""
+
 create_animal = """
 INSERT INTO Animal(fk_espece, date_entree)
 VALUES (:fk_espece, :date_entree);
