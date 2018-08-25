@@ -1,9 +1,9 @@
 
 remplir_creation = function(){
-  $("header").append($("<select id='creation'></select>"))
+  $("header").append($("<div id='creation'></div>"))
   $("#definition fieldset").each(function(){
     var esp = $(this).attr("class")
-    var opt = $("<option></option>")
+    var opt = $("<button></button>")
     opt.text(esp)
     opt.addClass(esp)
     $("#creation").append(opt)
@@ -33,7 +33,10 @@ enregistrer = function(){
   $.ajax({
     url: '/enregistrer',
     type: "POST",
-    success: function(rep){console.log(rep)},
+    success: function(rep){
+      console.log("coucou")
+      $(location).attr("href",'/series')
+    },
     error: function(err){console.log(err)},
     data: donnees,
     dataType: "text"
@@ -86,7 +89,9 @@ click_check = function(self){
   console.log(photos)
   id_photo = $("nav .select").data("num")
   if ($(self).is(":checked")){
-    if (!(photos.includes(id_photo))){photos.push(id_photo)}
+    if (!(photos.includes(id_photo))){
+      photos.push(id_photo)
+    }
   }else{
     if (photos.includes(id_photo)){
       index = photos.indexOf(id_photo)
@@ -96,12 +101,22 @@ click_check = function(self){
   field.data("photos", photos)
 }
 
+shortcut = function(){
+  $(document).keydown(function(e) {
+    var t = String.fromCharCode(e.which)
+    console.log(t)
+    if (t == "E"){enregistrer()}
+  })
+}
+
 $(function(){
   remplir_creation()
-  $("#creation option").on("click", clic_sur_creation)
+  $("#creation button").on("click", clic_sur_creation)
   wheelzoom(document.querySelectorAll("#principale"))
   $(".photo").on("click", clic_sur_miniature)
   $($(".photo")[0]).trigger("click")
 
   chargement()
+
+  shortcut()
 })
