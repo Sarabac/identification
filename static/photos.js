@@ -46,7 +46,8 @@ enregistrer = function(){
 clic_sur_creation = function(){
   var esp = $(this).attr("class")
   var nouveau = $("#definition fieldset."+esp).clone().prependTo("#animaux")
-  //nouveau.find("input:checkbox").prop("checked", true)
+  console.log(nouveau);
+  nouveau.find("input:checkbox").prop('checked', true).trigger("click").prop('checked', true)
 }
 
 chargement = function(){
@@ -86,7 +87,6 @@ clic_sur_miniature = function(){
 click_check = function(self){
   field = $(self).parent().parent()
   photos = field.data("photos")
-  console.log(photos)
   id_photo = $("nav .select").data("num")
   if ($(self).is(":checked")){
     if (!(photos.includes(id_photo))){
@@ -105,7 +105,9 @@ shortcut = function(){
   $(document).keydown(function(e) {
     var t = String.fromCharCode(e.which)
     console.log(t)
-    if (t == "E"){enregistrer()}
+    if (t == "W"){enregistrer()}
+    if (t == "D"){$(".check_animal").prop('checked', true).trigger("click").prop('checked', true)}
+    if (t == "A"){$(".check_animal").prop('checked', false).trigger("click").prop('checked', false)}
   })
 }
 
