@@ -9,7 +9,7 @@ import gestion
 from flask import Flask, render_template, request, jsonify
 import json
 import webbrowser
-import pdb
+import template_sqlite as ts
 # #### Creation de la base de donnee
 
 def create_conn():
@@ -67,12 +67,13 @@ def application(cursor, conn):
         )
         return render_template("photos.html.j2", **param)
 
-    @app.route("/enregistrer", methods=["POST"])
-    def enregistrer():
+    @app.route("/enregistrer/<int:id_serie>", methods=["POST"])
+    def enregistrer(id_serie):
         cursor, conn = create_conn()
         donnees = json.loads(request.get_data().decode())
         # de la forme : [{id_e: x, photos:[x,x,x], modalites:[x,x,x,x,x]}...]
-        gestion.enregistrer_animaux(cursor, donnees)
+
+        gestion.enregistrer_animaux(cursor, donnees, id_serie)
         conn.commit()
         return jsonify(status="ok")
 
@@ -83,8 +84,9 @@ def application(cursor, conn):
 if __name__ == "__main__":
     lancer()
 
+
 test = False
-if test == True:
+if test:
     cursor, conn = create_conn()
     p = cursor.execute("SELECT fk_serie FROM Photo").fetchall()
 

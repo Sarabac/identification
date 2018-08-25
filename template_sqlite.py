@@ -155,6 +155,14 @@ SELECT DISTINCT fk_animal FROM Pointer INNER JOIN Photo ON fk_photo = id_photo
 INNER JOIN Serie ON fk_serie = :id_serie
 );
 """
+
+detruire_pointer_sur_photo = """
+DELETE FROM Pointer WHERE fk_animal IN (
+SELECT DISTINCT fk_animal FROM Pointer INNER JOIN Photo ON fk_photo = id_photo
+INNER JOIN Serie ON fk_serie = :id_serie
+);
+"""
+
 create_animal = """
 INSERT INTO Animal(fk_espece, date_entree)
 VALUES (:fk_espece, :date_entree);

@@ -235,13 +235,15 @@ def definition_html(cursor):
     return result
 
 
-def enregistrer_animaux(cursor, animaux):
+def enregistrer_animaux(cursor, animaux, id_serie):
     """
     animaux: de la forme [{id_e: x, photos:[x,x,x], modalites:[x,x,x,x,x]}...]
     """
+
     # on commence par supprimer les precedents enregistrements
     #  qui ont eventuellement eu lieu sur les photos
-    cursor.execute(ts.detruire_animal_sur_photo, {"id_serie": animaux["serie"]})
+    cursor.execute(ts.detruire_animal_sur_photo, {"id_serie": id_serie})
+    cursor.execute(ts.detruire_pointer_sur_photo, {"id_serie": id_serie})
 
     for ind in animaux["individus"]:
         data = {"fk_espece": ind["id_e"], "date_entree": datetime.today()}

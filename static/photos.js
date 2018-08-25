@@ -29,9 +29,9 @@ enregistrer = function(){
   })
   id_serie = $("#principale").data("serie")
   donnees = JSON.stringify( {"individus": individus, "serie": id_serie} )
-  console.log(donnees)
+  path = '/enregistrer' + "/" + id_serie
   $.ajax({
-    url: '/enregistrer',
+    url: path,
     type: "POST",
     success: function(rep){
       console.log("coucou")
