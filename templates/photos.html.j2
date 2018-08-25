@@ -22,7 +22,7 @@ modalite: dict de la forme[id_caractere : (id, nom)...] avec
 {% endblock %}
 
 {% block header %}
-<a href="{{ url_for('liste_series') }}"><button>retour</button></a>
+<a href="{{ url_for('liste_series') + "#" + serie|string }}"><button>retour</button></a>
 <button onclick="enregistrer()">enregistrer</button>
 {% endblock %}
 
