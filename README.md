@@ -6,6 +6,10 @@ This application help to associate animals to picture and put label on it.
 
 <h2>Shortcut</h2>
 <p>
-e: save
-x: check
+w: save
+d: check
+a: uncheck
 </p
+
+<h2>ADD</h2>
+<p>ecureil, humans</p>
