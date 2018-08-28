@@ -1,0 +1,38 @@
+/*style generale*/
+body {
+  display: grid;
+  grid-template-columns: 1fr 70vw 1fr;
+  height: 100vh;
+  width: 100vw;
+}
+
+header{
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+main{
+  grid-column: 2;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+nav{
+  grid-column: 3;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+article{
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}

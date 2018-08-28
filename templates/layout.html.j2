@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Identification</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='series.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='general.css') }}">
+
+{% block style %}{% endblock %}
 
 <script type=text/javascript>
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};

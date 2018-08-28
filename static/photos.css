@@ -1,0 +1,41 @@
+/* style de l'analyseur de photos */
+#definition{
+  display: none;
+}
+
+fieldset{
+  display: block;
+}
+
+nav img{
+  margin-bottom: 3px
+}
+.photo{
+  width: 100%;
+  height: auto;
+}
+.select{
+  border: solid;
+  border-color: orange;
+}
+
+#principale{
+  width: auto;
+  max-height: 95vh;
+  max-width: 100%;
+  cursor: crosshair;
+}
+
+.caracteres{
+  display: flex;
+  flex-direction: column;
+}
+
+.caracteres select{
+  flex: 1;
+}
+
+.none{
+  background-color: pink;
+  font-style: italic;
+}

@@ -16,6 +16,10 @@ modalite: dict de la forme[id_caractere : (id, nom)...] avec
     nom: nom de la modalite
 #}
 
+{% block style %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='photos.css') }}">
+{% endblock %}
+
 {% block script %}
 <script type=text/javascript src={{ url_for('static', filename='photos.js') }}></script>
 <script>Acharger = {{chargement}}</script>
