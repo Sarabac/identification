@@ -49,6 +49,11 @@ def application(cursor, conn):
     app = Flask(__name__)
 
     @app.route('/')
+    def index():
+        cursor, conn = create_conn()
+        cursor.execute("SELECT id_espece, nom_espece FROM Espece")
+        return render_template("index.html.j2", espece=list(cursor.fetchall()))
+
     @app.route("/series")
     def liste_series():
         cursor, conn = create_conn()
@@ -67,6 +72,11 @@ def application(cursor, conn):
         )
         return render_template("photos.html.j2", **param)
 
+    @app.route("/espece/<int:id_espece>")
+    def etude_espece(id_espece):
+        cursor, conn = create_conn()
+        return ""
+
     @app.route("/enregistrer/<int:id_serie>", methods=["POST"])
     def enregistrer(id_serie):
         cursor, conn = create_conn()
@@ -80,6 +90,7 @@ def application(cursor, conn):
     webbrowser.open("http://127.0.0.1:5000/")
 
     return app
+
 
 if __name__ == "__main__":
     lancer()

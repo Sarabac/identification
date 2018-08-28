@@ -1,0 +1,24 @@
+{% extends "layout.html.j2" %}
+
+
+{# espece: espece list (id, nom) #}
+
+{% block style %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='index.css') }}">
+{% endblock %}
+
+
+
+{% block header %}
+<a href= {{ url_for('liste_series')}} >Analyse des images</a>
+{% endblock %}
+
+
+{% block nav %}
+{%for id, nom in espece%}
+  <a class = "espece" href = {{ url_for('etude_espece', id_espece = id)  }}
+    id = {{id}}>
+      {{nom}}
+  </a>
+{%endfor%}
+{% endblock %}
