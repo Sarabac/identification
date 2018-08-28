@@ -84,7 +84,8 @@ def init_photo(cursor):
     pour les incorporer dans la base de donnee.
     """
     # ## selection des ficher se terminant par ".jpg" ou ".JPG"
-    dossiers = [nom for nom in os.listdir(config.photos)]
+    dossiers = [nom for nom in os.listdir(config.photos)
+                if os.path.isdir(os.path.join(config.photos, nom))]
     # ## extraction des informations importantes
     total = len(dossiers)
     i = 0
