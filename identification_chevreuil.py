@@ -10,6 +10,7 @@ from flask import Flask, render_template, request, jsonify
 import json
 import webbrowser
 import template_sqlite as ts
+from filtres import filtres
 # #### Creation de la base de donnee
 
 def create_conn():
@@ -51,8 +52,7 @@ def application(cursor, conn):
     @app.route('/')
     def index():
         cursor, conn = create_conn()
-        cursor.execute("SELECT id_espece, nom_espece FROM Espece")
-        return render_template("index.html.j2", espece=list(cursor.fetchall()))
+        return render_template("index.html.j2", filtres=filtres)
 
     @app.route("/series")
     def liste_series():
@@ -72,10 +72,11 @@ def application(cursor, conn):
         )
         return render_template("photos.html.j2", **param)
 
-    @app.route("/espece/<int:id_espece>")
-    def etude_espece(id_espece):
+    @app.route("/filtre/<nom_espece>/<nom_filtre>")
+    def etude_animaux(nom_espece, nom_filtre):
         cursor, conn = create_conn()
-        return ""
+        animaux = filtres[nom_espece][nom_filtre](cursor)
+        return str(animaux)
 
     @app.route("/enregistrer/<int:id_serie>", methods=["POST"])
     def enregistrer(id_serie):
@@ -99,12 +100,4 @@ if __name__ == "__main__":
 test = False
 if test:
     cursor, conn = create_conn()
-    p = cursor.execute("SELECT fk_serie FROM Photo").fetchall()
-
-    u = [i[0] for i in p]
-    o = [u.count(i) for i in u]
-    len(o)
-    len(u)
-
-    t = cursor.execute("SELECT fk_camera FROM Serie").fetchall()
-    len(t)
+    o = filtres["oiseau"]["oiseaux"](cursor)
