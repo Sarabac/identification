@@ -12,20 +12,39 @@ zomm_press = function(e){
   if (t == "z"){
     z_press = !z_press
     if(z_press){
-      $(".photo").elevateZoom({scrollZoom : true})
+      $(".photo:visible").elevateZoom({scrollZoom : true})
     }else{
       img = $(".photo")
       $('.zoomContainer').remove();
       img.removeData('elevateZoom');
       img.removeData('zoomImage');
     }
-
   }
 }
 
+creer_individu = function(){
+  form = $("#newind")
+  nom = form.find("input[name = 'nom']").val()
+  comm = form.find("[name = 'commentaire']").val()
+
+  result = {
+    "nom": nom,
+    "commentaire": comm
+  }
+
+}
+
+drop2 = function(event, ui){
+
+  ui.draggable.detach().appendTo(this)
+}
 
 $(function(){
+  $('img').on('dragstart', function(event) { event.preventDefault(); })
   $(".camdiv").hide()
+  $(".animdiv").draggable({"helper": 'clone'})
+  $(".droppable").droppable({"drop":drop2})
+
   $(".cameras option").click(function(){click_camera($(this).attr("class"))})
 
 

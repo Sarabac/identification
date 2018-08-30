@@ -19,4 +19,11 @@ main {
 .animdiv {
   display: flex;
   padding: 1px;
+  width: 30vw;
+}
+
+.droppable {
+  background: skyblue;
+  min-height: 100px;
+  padding-bottom: 50px;
 }

@@ -12,10 +12,18 @@
 {% block script %}
 <script type=text/javascript src={{ url_for('static', filename='animals.js') }}></script>
 <script type=text/javascript src={{ url_for('static', filename='jquery.elevatezoom.js') }}></script>
+<script type=text/javascript src={{ url_for('static', filename='jquery-ui.min.js') }}></script>
 {% endblock %}
 
 {% block body %}
 <main>
+  <form id="newind">
+    <input type="text" name="nom" placeholder = "nom"/>
+    <textarea name = "commentaire" placeholder = "commentaire"></textarea>
+    <input type="button" value="Creer individu" onclick = "creer_individu()">
+    <div class = "droppable" id="newinddrop"></div>
+
+  </form>
   <header>
     <select class="cameras" name="cameras">
       {%for cam in non_classe.keys()%}
@@ -28,9 +36,9 @@
   </header>
   <nav>
     {%for cam in non_classe.keys()%}
-    <div class="camdiv {{cam}}">
+    <div class="camdiv {{cam}} droppable">
       {%for anim in non_classe[cam].keys()%}
-        <div class = "animdiv" data-id = {{anim}}>
+        <div class = "animdiv" id="anim{{anim}}" data-id = {{anim}}>
           {%for photo in non_classe[cam][anim]%}
           <img class=photo
           src={{url_for('send_photo', filename=photo)}}
