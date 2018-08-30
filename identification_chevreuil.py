@@ -6,7 +6,7 @@ import sqlite3
 import os
 import config
 import gestion
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import json
 import webbrowser
 import template_sqlite as ts
@@ -92,9 +92,9 @@ def application(cursor, conn):
 
     webbrowser.open("http://127.0.0.1:5000/")
 
-    @app.route('/' +config.photos + '/<path:filename>')
+    @app.route('/static-photos/<path:filename>')
     def send_photo(filename):
-        return send_from_directory(app.config[config.photos], filename)
+        return send_from_directory(config.photos, filename)
 
     return app
 

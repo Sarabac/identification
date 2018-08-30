@@ -5,6 +5,10 @@
   non_classe: model {id_animal: [file_photo ...], ...}
 #}
 
+{% block style %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='animals.css') }}">
+{% endblock %}
+
 {% block body %}
 <main>
   <header>
