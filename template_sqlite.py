@@ -197,3 +197,11 @@ INNER JOIN Pointer On id_photo=fk_photo
 INNER JOIN Animal On id_animal=fk_animal
 INNER JOIN Espece On id_espece=fk_espece
 """
+
+afficher_animaux = """
+SELECT fk_individu, id_animal, model, file FROM Animal
+INNER JOIN Pointer ON id_animal = fk_animal
+INNER JOIN Photo ON id_photo = fk_photo
+INNER JOIN Camera ON id_camera = fk_camera
+WHERE id_animal = :id
+"""

@@ -76,7 +76,9 @@ def application(cursor, conn):
     def etude_animaux(nom_espece, nom_filtre):
         cursor, conn = create_conn()
         animaux = filtres[nom_espece][nom_filtre](cursor)
-        return str(animaux)
+        non_classe = gestion.affichage_animaux(cursor, animaux)
+
+        return render_template("animals.html.j2", non_classe=non_classe)
 
     @app.route("/enregistrer/<int:id_serie>", methods=["POST"])
     def enregistrer(id_serie):

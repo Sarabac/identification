@@ -207,6 +207,25 @@ def affichage_photos(cursor, id_serie):
     return affichage
 
 
+def affichage_animaux(cursor, id_animaux):
+    animaux = []
+    for id in id_animaux:
+        cursor.execute(ts.afficher_animaux, {"id": id})
+        animaux += cursor.fetchall()
+    # animaux : fk_individu, id_animal, model, file
+    non_classe = dict()
+    classe = dict()
+    for anim in animaux:
+        if anim[0] is None:
+            model = non_classe.setdefault(anim[2], dict())
+            id_anim = model.setdefault(anim[1], list())
+            #chemin vers chaque photo
+            id_anim.append(os.path.join(config.photos, anim[3]))
+
+    return non_classe
+
+
+
 def definition_html(cursor):
     """
     Permet de construire les formulaire de definition d'un animal
@@ -288,6 +307,7 @@ def charger(cursor, serie):
             "modalites": modalites
         })
     return result
+
 
 if __name__ == "__main__":
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
