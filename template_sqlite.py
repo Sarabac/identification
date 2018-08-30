@@ -66,9 +66,17 @@ CREATE TABLE 'Animal' (
 'date_entree' INTEGER,
 'fk_espece'	INTEGER,
 'fk_user'	INTEGER,
+'fk_individu'	INTEGER,
 PRIMARY KEY(id_animal),
 FOREIGN KEY(fk_espece) REFERENCES Espece(id_espece),
-FOREIGN KEY(fk_user) REFERENCES User(id_user)
+FOREIGN KEY(fk_user) REFERENCES User(id_user),
+FOREIGN KEY(fk_individu) REFERENCES Individu(id_individu)
+);
+CREATE TABLE 'Individu' (
+'id_individu'	INTEGER ,
+'nom_individu'	TEXT,
+'commentaire'	TEXT,
+PRIMARY KEY(id_individu)
 );
 CREATE TABLE 'Serie'(
 id_serie INTEGER,
@@ -188,4 +196,12 @@ INNER Join Photo On id_camera=fk_camera
 INNER JOIN Pointer On id_photo=fk_photo
 INNER JOIN Animal On id_animal=fk_animal
 INNER JOIN Espece On id_espece=fk_espece
+"""
+
+afficher_animaux = """
+SELECT fk_individu, id_animal, model, file FROM Animal
+INNER JOIN Pointer ON id_animal = fk_animal
+INNER JOIN Photo ON id_photo = fk_photo
+INNER JOIN Camera ON id_camera = fk_camera
+WHERE id_animal = :id
 """

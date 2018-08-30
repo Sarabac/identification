@@ -1,0 +1,22 @@
+/* animals style */
+.photo{
+  width: 100%;
+  height: auto;
+  padding: 1px;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 30vw 70vw;
+  height: 100vh;
+  width: 100vw;
+}
+
+main {
+  grid-column: 1
+}
+
+.animdiv {
+  display: flex;
+  padding: 1px;
+}

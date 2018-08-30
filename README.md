@@ -4,11 +4,19 @@
 This application help to associate animals to picture and put label on it.
 </p>
 
+<h2>Dependencies</h2>
+<p>
+python3
+python3 module: flask
+python3 module: pillow
+</p>
 <h2>Shortcut</h2>
 <p>
 w: save
 d: check
 a: uncheck
+
+z: enable/disable zoom
 </p
 
 <h2>ADD</h2>

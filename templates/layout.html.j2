@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Identification</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='series.css') }}">
+
+{% block style_origin %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='general.css') }}">
+{% endblock %}
+{% block style %}{% endblock %}
 
 <script type=text/javascript>
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -16,6 +20,7 @@
 
 </head>
 
+{% block body %}
 <body>
     <header>
       {% block header %}{% endblock %}
@@ -31,5 +36,5 @@
       {% block article %}{% endblock %}
     </article>
 </body>
-
+{% endblock %}
 </html>

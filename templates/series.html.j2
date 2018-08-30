@@ -1,9 +1,9 @@
 {% extends "layout.html.j2" %}
 
-
-{% block script %}
-<script>$(function(){$("nav").hide()})</script>
+{% block style %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='series.css') }}">
 {% endblock %}
+
 
 
 {% block main %}

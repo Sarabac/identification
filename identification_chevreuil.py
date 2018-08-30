@@ -6,10 +6,11 @@ import sqlite3
 import os
 import config
 import gestion
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import json
 import webbrowser
 import template_sqlite as ts
+from filtres import filtres
 # #### Creation de la base de donnee
 
 def create_conn():
@@ -49,6 +50,10 @@ def application(cursor, conn):
     app = Flask(__name__)
 
     @app.route('/')
+    def index():
+        cursor, conn = create_conn()
+        return render_template("index.html.j2", filtres=filtres)
+
     @app.route("/series")
     def liste_series():
         cursor, conn = create_conn()
@@ -67,6 +72,14 @@ def application(cursor, conn):
         )
         return render_template("photos.html.j2", **param)
 
+    @app.route("/filtre/<nom_espece>/<nom_filtre>")
+    def etude_animaux(nom_espece, nom_filtre):
+        cursor, conn = create_conn()
+        animaux = filtres[nom_espece][nom_filtre](cursor)
+        non_classe = gestion.affichage_animaux(cursor, animaux)
+
+        return render_template("animals.html.j2", non_classe=non_classe)
+
     @app.route("/enregistrer/<int:id_serie>", methods=["POST"])
     def enregistrer(id_serie):
         cursor, conn = create_conn()
@@ -79,7 +92,12 @@ def application(cursor, conn):
 
     webbrowser.open("http://127.0.0.1:5000/")
 
+    @app.route('/static-photos/<path:filename>')
+    def send_photo(filename):
+        return send_from_directory(config.photos, filename)
+
     return app
+
 
 if __name__ == "__main__":
     lancer()
@@ -88,12 +106,7 @@ if __name__ == "__main__":
 test = False
 if test:
     cursor, conn = create_conn()
-    p = cursor.execute("SELECT fk_serie FROM Photo").fetchall()
-
-    u = [i[0] for i in p]
-    o = [u.count(i) for i in u]
-    len(o)
-    len(u)
-
-    t = cursor.execute("SELECT fk_camera FROM Serie").fetchall()
-    len(t)
+    f = """CREATE TABLE 'Individu' ('id_individu'	INTEGER ,'nom_individu'	TEXT,'commentaire'	TEXT,PRIMARY KEY(id_individu));"""
+    cursor.execute(p)
+    p = "ALTER TABLE Animal ADD COLUMN 'fk_individu'	INTEGER"
+    conn.commit()

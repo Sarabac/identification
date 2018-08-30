@@ -1,0 +1,28 @@
+{% extends "layout.html.j2" %}
+
+
+{# filtres: dict {espece: {filtre}} #}
+
+{% block style %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='index.css') }}">
+{% endblock %}
+
+
+
+{% block header %}
+<a href= {{ url_for('liste_series')}} >Analyse des images</a>
+{% endblock %}
+
+
+{% block nav %}
+{%for nom in filtres.keys()%}
+  <fieldset class = filtre>
+    <legend>{{nom}}</legend>
+    {%for filtre in filtres[nom].keys()%}
+      <a href = {{url_for('etude_animaux', nom_espece = nom, nom_filtre= filtre) }}>
+        {{filtre}}
+      </a>
+    {%endfor%}
+  </fieldset>
+{%endfor%}
+{% endblock %}
