@@ -202,7 +202,7 @@ def affichage_photos(cursor, id_serie):
     for id, chem in cursor.fetchall():
         affichage["photos"].append((
             int(id),
-            os.path.join(config.photos, chem)
+            chem
         ))
     return affichage
 
@@ -220,7 +220,7 @@ def affichage_animaux(cursor, id_animaux):
             model = non_classe.setdefault(anim[2], dict())
             id_anim = model.setdefault(anim[1], list())
             #chemin vers chaque photo
-            id_anim.append(os.path.join(config.photos, anim[3]))
+            id_anim.append(anim[3])
 
     return non_classe
 

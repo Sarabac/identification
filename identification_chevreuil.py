@@ -92,6 +92,10 @@ def application(cursor, conn):
 
     webbrowser.open("http://127.0.0.1:5000/")
 
+    @app.route('/' +config.photos + '/<path:filename>')
+    def send_photo(filename):
+        return send_from_directory(app.config[config.photos], filename)
+
     return app
 
 

@@ -24,7 +24,7 @@
         <div class = "animdiv" data-id = {{anim}}>
           {%for photo in non_classe[cam][anim]%}
           <img class=photo
-          src={{photo}}
+          src={{url_for('send_photo', filename=photo)}}
           />
           {%endfor%}
         </div>

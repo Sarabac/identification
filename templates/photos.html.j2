@@ -33,8 +33,8 @@ modalite: dict de la forme[id_caractere : (id, nom)...] avec
 {% block nav %}
   {%for id,che in photos%}
     <img class=photo
-    src={{url_for('static', filename=che[7:])}}
-    data-url={{url_for('static', filename=che[7:])}}
+    src={{url_for('send_photo', filename=che)}}
+    data-url={{url_for('send_photo', filename=che)}}
     data-num={{id}} />
       {#on retire les 7 premieres lettres de che qui correspondent a 'static/'
       <img src={{url_for('static', filename=che[7:])}} name={{id}}/>#}
