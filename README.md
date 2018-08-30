@@ -15,6 +15,8 @@ python3 module: pillow
 w: save
 d: check
 a: uncheck
+
+z: enable/disable zoom
 </p
 
 <h2>ADD</h2>

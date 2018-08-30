@@ -106,4 +106,7 @@ if __name__ == "__main__":
 test = False
 if test:
     cursor, conn = create_conn()
-    o = filtres["oiseau"]["oiseaux"](cursor)
+    f = """CREATE TABLE 'Individu' ('id_individu'	INTEGER ,'nom_individu'	TEXT,'commentaire'	TEXT,PRIMARY KEY(id_individu));"""
+    cursor.execute(p)
+    p = "ALTER TABLE Animal ADD COLUMN 'fk_individu'	INTEGER"
+    conn.commit()
