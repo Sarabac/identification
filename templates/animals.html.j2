@@ -5,8 +5,13 @@
   non_classe: model {id_animal: [file_photo ...], ...}
 #}
 
-{% block style %}
+{% block style_origin %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='animals.css') }}">
+{% endblock %}
+
+{% block script %}
+<script type=text/javascript src={{ url_for('static', filename='animals.js') }}></script>
+<script type=text/javascript src={{ url_for('static', filename='jquery.elevatezoom.js') }}></script>
 {% endblock %}
 
 {% block body %}
@@ -14,7 +19,7 @@
   <header>
     <select class="cameras" name="cameras">
       {%for cam in non_classe.keys()%}
-        <option class={{cam}}>
+        <option class={{cam}} value={{cam}}>
           {{cam}}
         </option>
       {%endfor%}
@@ -29,6 +34,7 @@
           {%for photo in non_classe[cam][anim]%}
           <img class=photo
           src={{url_for('send_photo', filename=photo)}}
+          title={{photo}}
           />
           {%endfor%}
         </div>

@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Identification</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='general.css') }}">
 
+{% block style_origin %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='general.css') }}">
+{% endblock %}
 {% block style %}{% endblock %}
 
 <script type=text/javascript>
