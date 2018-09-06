@@ -108,9 +108,16 @@ INSERT INTO Caractere (nom_caractere, fk_espece) VALUES (:nom, :espece);
 create_modalite = """
 INSERT INTO Modalite (nom_modalite, fk_caractere) VALUES (:nom, :id_caractere);
 """
+create_ind = """
+INSERT INTO Individu (nom_individu, commentaire) VALUES (:nom, :commentaire);
+"""
 # on associe apres coup chaque photo a une serie
 update_photo = """
 UPDATE Photo SET fk_serie = :serie WHERE id_photo = :id;
+"""
+
+update_animal = """
+UPDATE Animal SET fk_individu = :ind WHERE id_animal = :id;
 """
 
 select_date_photo = """

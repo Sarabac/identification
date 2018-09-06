@@ -25,6 +25,9 @@
 
   </form>
   <header>
+
+  </header>
+  <nav>
     <select class="cameras" name="cameras">
       {%for cam in non_classe.keys()%}
         <option class={{cam}} value={{cam}}>
@@ -33,9 +36,7 @@
       {%endfor%}
 
     </select>
-  </header>
-  <nav>
-    {%for cam in non_classe.keys()%}
+    {%for cam in (non_classe.keys())%}
     <div class="camdiv {{cam}} droppable">
       {%for anim in non_classe[cam].keys()%}
         <div class = "animdiv" id="anim{{anim}}" data-id = {{anim}}>

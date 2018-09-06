@@ -23,20 +23,49 @@ zomm_press = function(e){
 }
 
 creer_individu = function(){
+  console.log("coucou");
   form = $("#newind")
   nom = form.find("input[name = 'nom']").val()
   comm = form.find("[name = 'commentaire']").val()
+  animaux = new Array()
+  $("#newinddrop .animdiv").each(function(i){animaux.push($(this).data("id"))})
 
   result = {
     "nom": nom,
-    "commentaire": comm
+    "commentaire": comm,
+    "animaux": animaux
   }
+  console.log(result);
+
+  donnees = JSON.stringify(result)
+  path = '/creer_ind'
+
+  $.ajax({
+    url: path,
+    type: "POST",
+    success: function(rep){console.log(rep)},
+    error: function(err){console.log(err)},
+    data: donnees,
+    dataType: "text"
+  })
+
 
 }
 
 drop2 = function(event, ui){
-
   ui.draggable.detach().appendTo(this)
+}
+
+count_anim_cam = function(){
+  $(this).parent("nav").each(function(index, nav) {
+    $(nav).find("select.cameras option").each(function(index, opt) {
+      cam = $(opt).attr("class")
+      nb = $(nav).find(".camdiv." + cam + ">.animdiv").filter(function(i){
+        return($(this).css("display") != "none")
+      }).length
+      $(opt).text(cam + "(" +nb+ ")")
+    });
+  });
 }
 
 $(function(){
@@ -49,6 +78,7 @@ $(function(){
 
 
   $(document).keypress(zomm_press)
+  $("select.cameras").click(count_anim_cam)
 
 
 })

@@ -92,6 +92,16 @@ def application(cursor, conn):
 
     webbrowser.open("http://127.0.0.1:5000/")
 
+    @app.route("/creer_ind", methods=["POST"])
+    def creer_ind():
+        cursor, conn = create_conn()
+        donnees = json.loads(request.get_data().decode())
+        # de la forme : {'animaux': [1422, 775], 'commentaire': 'asdasdasdasdas', 'nom': 'asdas'}
+        print(donnees)
+        gestion.create_ind(cursor, donnees)
+        conn.commit()
+        return jsonify(status="ok")
+
     @app.route('/static-photos/<path:filename>')
     def send_photo(filename):
         return send_from_directory(config.photos, filename)

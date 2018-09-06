@@ -77,6 +77,15 @@ def create_photo(cursor, dossier):
         ids_photo.append(cursor.lastrowid)
 
 
+def create_ind(cursor, data):
+    """cree un nouvel individu et lui assigne des animaux """
+
+    animals = data.pop("animaux")
+    cursor.execute(ts.create_ind, data)
+    id_ind = cursor.lastrowid
+    for anim in animals:
+        cursor.execute(ts.update_animal, {"id": anim, "ind": id_ind})
+        
 
 def init_photo(cursor):
     """

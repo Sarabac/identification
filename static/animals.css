@@ -22,6 +22,10 @@ main {
   width: 30vw;
 }
 
+.camdiv{
+  display: none;
+}
+
 .droppable {
   background: skyblue;
   min-height: 100px;
