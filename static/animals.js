@@ -13,7 +13,6 @@ click_camera = function(){
 
 zomm_press = function(e){
   var t = String.fromCharCode(e.which)
-  console.log(t)
   if (t == "z"){
     z_press = !z_press
     if(z_press){
@@ -43,7 +42,6 @@ open_serie = function(){
 }
 
 creer_individu = function(){
-  console.log("coucou");
   form = $("#newind")
   nom = form.find("input[name = 'nom']").val()
   comm = form.find("[name = 'commentaire']").val()
@@ -55,7 +53,6 @@ creer_individu = function(){
     "commentaire": comm,
     "animaux": animaux
   }
-  console.log(result);
 
   donnees = JSON.stringify(result)
   path = '/creer_ind'
@@ -63,13 +60,32 @@ creer_individu = function(){
   $.ajax({
     url: path,
     type: "POST",
-    success: function(rep){console.log(rep)},
+    success: function(rep){location.reload()},
     error: function(err){console.log(err)},
     data: donnees,
     dataType: "text"
   })
 
 
+
+}
+
+update_individu = function(){
+  result = new Array
+  $("nav").each(function(index, nav) {
+    $(nav).find(".animdiv").each(function(index, anim) {
+      result.push({ind:$(nav).data("id"), anim: $(anim).data("id")})
+    })
+  })
+  console.log(result);
+  $.ajax({
+    url: "/update_individu",
+    type: "POST",
+    success: function(rep){console.log(rep)},
+    error: function(err){console.log(err)},
+    data: JSON.stringify(result),
+    dataType: "text"
+  })
 }
 
 drop2 = function(event, ui){
@@ -77,7 +93,7 @@ drop2 = function(event, ui){
 }
 
 count_anim_cam = function(){
-  $(this).parent("nav").each(function(index, nav) {
+  $(this).parents("nav").each(function(index, nav) {
     $(nav).find("select.cameras option").each(function(index, opt) {
       cam = $(opt).attr("class")
       nb = $(nav).find(".camdiv." + cam + ">.animdiv").filter(function(i){

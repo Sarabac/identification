@@ -87,6 +87,15 @@ def create_ind(cursor, data):
         cursor.execute(ts.update_animal, {"id": anim, "ind": id_ind})
 
 
+def update_individu(cursor, data):
+
+    for i in data:
+        if i["ind"] == "None":
+            cursor.execute(ts.update_animal, {"id": i["anim"], "ind": None})
+        else:
+            cursor.execute(ts.update_animal, {"id": i["anim"], "ind": i["ind"]})
+
+
 def init_photo(cursor):
     """
     Parcours le dossier des photos et retourne les instructions

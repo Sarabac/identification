@@ -13,6 +13,7 @@ import template_sqlite as ts
 from filtres import filtres
 # #### Creation de la base de donnee
 
+
 def create_conn():
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
@@ -77,9 +78,10 @@ def application(cursor, conn):
         cursor, conn = create_conn()
         animaux = filtres[nom_espece][nom_filtre](cursor)
         indivs = gestion.affichage_animaux(cursor, animaux)
-        print(indivs)
-
-        return render_template("animals.html.j2", individus=indivs)
+        cursor.execute(ts.descr_individus)
+        descr = {i[0]: {"nom": i[1], "comm": i[2]} for i in cursor.fetchall()}
+        kwd = {"individus": indivs, "description": descr}
+        return render_template("animals.html.j2", **kwd)
 
     @app.route("/enregistrer/<int:id_serie>", methods=["POST"])
     def enregistrer(id_serie):
@@ -109,6 +111,14 @@ def application(cursor, conn):
             stat = "fail"
         conn.commit()
         return jsonify(status=stat)
+
+    @app.route("/update_individu", methods=["POST"])
+    def update_individu():
+        cursor, conn = create_conn()
+        donnees = json.loads(request.get_data().decode())
+        gestion.update_individu(cursor, donnees)
+        conn.commit()
+        return jsonify(status="ok")
 
     @app.route('/static-photos/<path:filename>')
     def send_photo(filename):

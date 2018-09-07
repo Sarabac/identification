@@ -1,26 +1,26 @@
 {% extends "layout.html.j2" %}
 
-{#variables:
-  Animal: id, id_individu, [file_photo]
-  non_classe: model {id_animal: [file_photo ...], ...}
-#}
-
 
 {# variables:
-  indiv{ model_camera { id_animal {
+  individus{ model_camera { id_animal {
     "series": [id_serie ...], "photos": [{"file":file, "date":date}]
 
+  description { id: {nom :..., comm:... }...}
+
 #}
-{% macro navigation(cameras) %}
-<nav>
+{% macro navigation(cameras, id, nom = "", comm = "") %}
+<nav data-id = {{id}}>
+<header>
 <select class="cameras" name="cameras">
   {%for cam in cameras.keys()%}
     <option class={{cam}} value={{cam}}>
       {{cam}}
     </option>
   {%endfor%}
-
 </select>
+<h3>{{nom}}</h3>
+<p>{{comm}}</p>
+</header>
 {%for cam in (cameras.keys())%}
 <div class="camdiv {{cam}} droppable">
   {%for anim in cameras[cam].keys()%}
@@ -53,6 +53,10 @@
 
 {% block body %}
 <main>
+  <form>
+    <input type="button" value="Annuler" onclick = "location.reload()">
+    <input type="button" value="Sauvegarder" onclick = "update_individu()">
+  </form>
   <form id="newind">
     <input type="text" name="nom" placeholder = "nom"/>
     <textarea name = "commentaire" placeholder = "commentaire"></textarea>
@@ -60,12 +64,12 @@
     <div class = "droppable" id="newinddrop"></div>
 
   </form>
-    {{navigation(individus[None])}}
+    {{navigation(individus[none], none)}}
   </main>
   <article>
   {%for ind in individus.keys()%}
   {%if ind is not none%}
-    {{navigation(individus[ind])}}
+    {{navigation(individus[ind], ind, description[ind]["nom"], description[ind]["comm"])}}
   {%endif%}
   {%endfor%}
   </article>

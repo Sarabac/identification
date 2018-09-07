@@ -8,7 +8,7 @@
 body {
   display: grid;
   grid-template-columns: 30vw 70vw;
-  grid-template-rows: 90vh;
+  grid-template-rows: 95vh;
   height: 90vh;
   width: 100vw;
 }
@@ -19,6 +19,14 @@ main {
   height: 100%;
 }
 
+header{
+  display: flex;
+  align-items: baseline;
+
+}
+header>*{
+  margin-left: 2%;
+}
 .animdiv {
   display: flex;
   padding: 1px;
@@ -31,17 +39,21 @@ main {
 
 .droppable {
   background: skyblue;
-  min-height: 100px;
+  min-height: 50px;
   padding-bottom: 50px;
 }
 
 nav{
   height: 100%;
-  overflow-y: scroll;
+  display: inline-block;
 }
 article{
   display: flex;
   grid-column: 2;
   grid-row: 1;
   overflow: scroll;
+}
+
+form{
+  display: inline-block;
 }

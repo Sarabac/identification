@@ -212,3 +212,6 @@ INNER JOIN Photo ON id_photo = fk_photo
 INNER JOIN Camera ON id_camera = fk_camera
 WHERE id_animal = :id
 """
+descr_individus = """
+SELECT id_individu, nom_individu, commentaire FROM Individu
+"""
