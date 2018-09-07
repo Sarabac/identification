@@ -5,6 +5,42 @@
   non_classe: model {id_animal: [file_photo ...], ...}
 #}
 
+
+{# variables:
+  indiv{ model_camera { id_animal {
+    "series": [id_serie ...], "photos": [{"file":file, "date":date}]
+
+#}
+{% macro navigation(cameras) %}
+<nav>
+<select class="cameras" name="cameras">
+  {%for cam in cameras.keys()%}
+    <option class={{cam}} value={{cam}}>
+      {{cam}}
+    </option>
+  {%endfor%}
+
+</select>
+{%for cam in (cameras.keys())%}
+<div class="camdiv {{cam}} droppable">
+  {%for anim in cameras[cam].keys()%}
+    <div class = "animdiv" id="anim{{anim}}" data-id = {{anim}} data-series = {{cameras[cam][anim]["series"]}}>
+      {%for photo in cameras[cam][anim]["photos"]%}
+      <img class=photo
+      data-src={{url_for('send_photo', filename=photo["file"])}}
+      title="{{photo['date']}}"
+      />
+      {%endfor%}
+    </div>
+  {%endfor%}
+</div>
+{%endfor%}
+
+</nav>
+
+{% endmacro %}}
+
+
 {% block style_origin %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='animals.css') }}">
 {% endblock %}
@@ -24,34 +60,13 @@
     <div class = "droppable" id="newinddrop"></div>
 
   </form>
-  <header>
-
-  </header>
-  <nav>
-    <select class="cameras" name="cameras">
-      {%for cam in non_classe.keys()%}
-        <option class={{cam}} value={{cam}}>
-          {{cam}}
-        </option>
-      {%endfor%}
-
-    </select>
-    {%for cam in (non_classe.keys())%}
-    <div class="camdiv {{cam}} droppable">
-      {%for anim in non_classe[cam].keys()%}
-        <div class = "animdiv" id="anim{{anim}}" data-id = {{anim}}>
-          {%for photo in non_classe[cam][anim]%}
-          <img class=photo
-          src={{url_for('send_photo', filename=photo)}}
-          title={{photo}}
-          />
-          {%endfor%}
-        </div>
-      {%endfor%}
-    </div>
-    {%endfor%}
-
-  </nav>
-
-</main>
+    {{navigation(individus[None])}}
+  </main>
+  <article>
+  {%for ind in individus.keys()%}
+  {%if ind is not none%}
+    {{navigation(individus[ind])}}
+  {%endif%}
+  {%endfor%}
+  </article>
 {% endblock %}

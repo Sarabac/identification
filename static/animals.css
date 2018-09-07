@@ -8,12 +8,15 @@
 body {
   display: grid;
   grid-template-columns: 30vw 70vw;
-  height: 100vh;
+  grid-template-rows: 90vh;
+  height: 90vh;
   width: 100vw;
 }
 
 main {
-  grid-column: 1
+  grid-column: 1;
+  grid-row: 1;
+  height: 100%;
 }
 
 .animdiv {
@@ -30,4 +33,15 @@ main {
   background: skyblue;
   min-height: 100px;
   padding-bottom: 50px;
+}
+
+nav{
+  height: 100%;
+  overflow-y: scroll;
+}
+article{
+  display: flex;
+  grid-column: 2;
+  grid-row: 1;
+  overflow: scroll;
 }

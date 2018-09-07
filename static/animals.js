@@ -1,9 +1,14 @@
 
 z_press = false
 
-click_camera = function(cam){
-  $(".camdiv").hide()
-  $(".camdiv." + cam).show()
+click_camera = function(){
+  cam = $(this).attr("class")
+  $(this).parents("nav").find(".camdiv").hide()
+  camdiv = $(this).parents("nav").find(".camdiv." + cam)
+  camdiv.find("img").each(function(index, img) {
+    $(img).attr('src', $(img).data('src'))
+  })
+  camdiv.show()
 }
 
 zomm_press = function(e){
@@ -18,6 +23,21 @@ zomm_press = function(e){
       $('.zoomContainer').remove();
       img.removeData('elevateZoom');
       img.removeData('zoomImage');
+    }
+  }
+}
+
+open_serie = function(){
+  series = $(this).data("series")
+  for (ser in series){
+    chemin = "/serie/" + series[ser]
+    win = window.open(chemin, '_blank');
+    if (win) {
+      //Browser has allowed it to be opened
+      win.focus();
+    } else {
+      //Browser has blocked it
+      alert('Veiller autoriser l ouverture d un nouvel onglet.');
     }
   }
 }
@@ -70,11 +90,10 @@ count_anim_cam = function(){
 
 $(function(){
   $('img').on('dragstart', function(event) { event.preventDefault(); })
-  $(".camdiv").hide()
-  $(".animdiv").draggable({"helper": 'clone'})
+  $(".animdiv").draggable({"helper": 'clone'}).dblclick(open_serie)
   $(".droppable").droppable({"drop":drop2})
 
-  $(".cameras option").click(function(){click_camera($(this).attr("class"))})
+  $(".cameras option").click(click_camera)
 
 
   $(document).keypress(zomm_press)

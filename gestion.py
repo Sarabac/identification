@@ -85,7 +85,7 @@ def create_ind(cursor, data):
     id_ind = cursor.lastrowid
     for anim in animals:
         cursor.execute(ts.update_animal, {"id": anim, "ind": id_ind})
-        
+
 
 def init_photo(cursor):
     """
@@ -221,17 +221,18 @@ def affichage_animaux(cursor, id_animaux):
     for id in id_animaux:
         cursor.execute(ts.afficher_animaux, {"id": id})
         animaux += cursor.fetchall()
-    # animaux : fk_individu, id_animal, model, file
-    non_classe = dict()
+    # animaux : fk_individu, model, id_animal, fk_serie, file, date
     classe = dict()
     for anim in animaux:
-        if anim[0] is None:
-            model = non_classe.setdefault(anim[2], dict())
-            id_anim = model.setdefault(anim[1], list())
-            #chemin vers chaque photo
-            id_anim.append(anim[3])
-
-    return non_classe
+        indiv = classe.setdefault(anim[0], dict())
+        model = indiv.setdefault(anim[1], dict())
+        id_anim = model.setdefault(anim[2], dict())
+        series = id_anim.setdefault("series", list())
+        if anim[3] not in series:
+            series.append(anim[3])
+        photos = id_anim.setdefault("photos", list())
+        photos.append({"file": anim[4], "date": anim[5]})
+    return classe
 
 
 

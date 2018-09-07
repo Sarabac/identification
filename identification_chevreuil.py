@@ -76,9 +76,10 @@ def application(cursor, conn):
     def etude_animaux(nom_espece, nom_filtre):
         cursor, conn = create_conn()
         animaux = filtres[nom_espece][nom_filtre](cursor)
-        non_classe = gestion.affichage_animaux(cursor, animaux)
+        indivs = gestion.affichage_animaux(cursor, animaux)
+        print(indivs)
 
-        return render_template("animals.html.j2", non_classe=non_classe)
+        return render_template("animals.html.j2", individus=indivs)
 
     @app.route("/enregistrer/<int:id_serie>", methods=["POST"])
     def enregistrer(id_serie):
@@ -96,11 +97,18 @@ def application(cursor, conn):
     def creer_ind():
         cursor, conn = create_conn()
         donnees = json.loads(request.get_data().decode())
-        # de la forme : {'animaux': [1422, 775], 'commentaire': 'asdasdasdasdas', 'nom': 'asdas'}
-        print(donnees)
-        gestion.create_ind(cursor, donnees)
+        # de la forme : {'animaux': [1422, 775],
+        #   'commentaire': 'asdasdasdasdas', 'nom': 'asdas'}
+        verif = any([type(i) is int for i in donnees["animaux"]])
+        verif = verif and bool(donnees["commentaire"])
+        verif = verif and bool(donnees["nom"])
+        if verif:
+            gestion.create_ind(cursor, donnees)
+            stat = "ok"
+        else:
+            stat = "fail"
         conn.commit()
-        return jsonify(status="ok")
+        return jsonify(status=stat)
 
     @app.route('/static-photos/<path:filename>')
     def send_photo(filename):
