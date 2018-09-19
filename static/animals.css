@@ -8,15 +8,58 @@
 body {
   display: grid;
   grid-template-columns: 30vw 70vw;
-  height: 100vh;
+  grid-template-rows: 95vh;
+  height: 90vh;
   width: 100vw;
 }
 
 main {
-  grid-column: 1
+  grid-column: 1;
+  grid-row: 1;
+  height: 100%;
 }
 
+header{
+  display: flex;
+  align-items: baseline;
+
+}
+header>*{
+  margin-left: 2%;
+}
 .animdiv {
   display: flex;
   padding: 1px;
+  width: 30vw;
+}
+
+.camdiv{
+  display: none;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.droppable {
+  background: skyblue;
+  min-height: 50px;
+  padding-bottom: 50px;
+}
+
+nav{
+  height: 100%;
+  display: inline-block;
+}
+article{
+  display: flex;
+  grid-column: 2;
+  grid-row: 1;
+  overflow: scroll;
+}
+
+form{
+  display: inline-block;
+}
+
+main nav {
+
 }

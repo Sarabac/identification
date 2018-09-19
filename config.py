@@ -11,7 +11,7 @@ from datetime import timedelta
 # ### chemin vers les dossier #####
 # ## s'ecrit sout la forme :
 # os.path.join("dossier", "sous_dossier", "sous_sous_dossier")
-photos = os.path.join("static", "photos")
+photos = os.path.join("..", "..", "identification", "static", "photos")
 base = os.path.join("chevreuil.db")
 template = os.path.join("template")
 

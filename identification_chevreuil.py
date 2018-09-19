@@ -13,6 +13,7 @@ import template_sqlite as ts
 from filtres import filtres
 # #### Creation de la base de donnee
 
+
 def create_conn():
     conn = sqlite3.connect(config.base, detect_types=config.detect_types)
     cursor = conn.cursor()
@@ -76,9 +77,11 @@ def application(cursor, conn):
     def etude_animaux(nom_espece, nom_filtre):
         cursor, conn = create_conn()
         animaux = filtres[nom_espece][nom_filtre](cursor)
-        non_classe = gestion.affichage_animaux(cursor, animaux)
-
-        return render_template("animals.html.j2", non_classe=non_classe)
+        indivs = gestion.affichage_animaux(cursor, animaux)
+        cursor.execute(ts.descr_individus)
+        descr = {i[0]: {"nom": i[1], "comm": i[2]} for i in cursor.fetchall()}
+        kwd = {"individus": indivs, "description": descr}
+        return render_template("animals.html.j2", **kwd)
 
     @app.route("/enregistrer/<int:id_serie>", methods=["POST"])
     def enregistrer(id_serie):
@@ -91,6 +94,33 @@ def application(cursor, conn):
         return jsonify(status="ok")
 
     webbrowser.open("http://127.0.0.1:5000/")
+
+    @app.route("/creer_ind", methods=["POST"])
+    def creer_ind():
+        cursor, conn = create_conn()
+        donnees = json.loads(request.get_data().decode())
+        # de la forme : {'animaux': [1422, 775],
+        #   'commentaire': 'asdasdasdasdas', 'nom': 'asdas'}
+        verif = any([type(i) is int for i in donnees["animaux"]])
+        verif = verif and bool(donnees["commentaire"])
+        verif = verif and bool(donnees["nom"])
+        if verif:
+            gestion.create_ind(cursor, donnees)
+            stat = "ok"
+        else:
+            stat = "fail"
+        conn.commit()
+        return jsonify(status=stat)
+
+    @app.route("/update_individu", methods=["POST"])
+    def update_individu():
+        cursor, conn = create_conn()
+        donnees = json.loads(request.get_data().decode())
+        gestion.update_individu(cursor, donnees)
+        conn.commit()
+        cursor.execute(ts.clear_individus)
+        conn.commit()
+        return jsonify(status="ok")
 
     @app.route('/static-photos/<path:filename>')
     def send_photo(filename):

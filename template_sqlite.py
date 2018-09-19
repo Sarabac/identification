@@ -108,9 +108,16 @@ INSERT INTO Caractere (nom_caractere, fk_espece) VALUES (:nom, :espece);
 create_modalite = """
 INSERT INTO Modalite (nom_modalite, fk_caractere) VALUES (:nom, :id_caractere);
 """
+create_ind = """
+INSERT INTO Individu (nom_individu, commentaire) VALUES (:nom, :commentaire);
+"""
 # on associe apres coup chaque photo a une serie
 update_photo = """
 UPDATE Photo SET fk_serie = :serie WHERE id_photo = :id;
+"""
+
+update_animal = """
+UPDATE Animal SET fk_individu = :ind WHERE id_animal = :id;
 """
 
 select_date_photo = """
@@ -199,9 +206,18 @@ INNER JOIN Espece On id_espece=fk_espece
 """
 
 afficher_animaux = """
-SELECT fk_individu, id_animal, model, file FROM Animal
+SELECT fk_individu, model, id_animal, fk_serie, file, date FROM Animal
 INNER JOIN Pointer ON id_animal = fk_animal
 INNER JOIN Photo ON id_photo = fk_photo
 INNER JOIN Camera ON id_camera = fk_camera
 WHERE id_animal = :id
+"""
+
+descr_individus = """
+SELECT id_individu, nom_individu, commentaire FROM Individu
+"""
+
+clear_individus = """
+DELETE FROM Individu
+WHERE id_individu NOT IN (SELECT fk_individu FROM Animal)
 """
