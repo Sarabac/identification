@@ -77,11 +77,15 @@ update_individu = function(){
       result.push({ind:$(nav).data("id"), anim: $(anim).data("id")})
     })
   })
+  // keep possible to set the fk_individu to none
+  $("#newinddrop .animdiv").each(function(index, anim) {
+    result.push({ind:"None", anim: $(anim).data("id")})
+  })
   console.log(result);
   $.ajax({
     url: "/update_individu",
     type: "POST",
-    success: function(rep){console.log(rep)},
+    success: function(rep){location.reload()},
     error: function(err){console.log(err)},
     data: JSON.stringify(result),
     dataType: "text"

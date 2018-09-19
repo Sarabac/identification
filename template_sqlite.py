@@ -212,6 +212,12 @@ INNER JOIN Photo ON id_photo = fk_photo
 INNER JOIN Camera ON id_camera = fk_camera
 WHERE id_animal = :id
 """
+
 descr_individus = """
 SELECT id_individu, nom_individu, commentaire FROM Individu
+"""
+
+clear_individus = """
+DELETE FROM Individu
+WHERE id_individu NOT IN (SELECT fk_individu FROM Animal)
 """

@@ -35,6 +35,8 @@ header>*{
 
 .camdiv{
   display: none;
+  overflow-y: scroll;
+  height: 100%;
 }
 
 .droppable {
@@ -56,4 +58,8 @@ article{
 
 form{
   display: inline-block;
+}
+
+main nav {
+
 }

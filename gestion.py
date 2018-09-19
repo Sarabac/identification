@@ -94,6 +94,7 @@ def update_individu(cursor, data):
             cursor.execute(ts.update_animal, {"id": i["anim"], "ind": None})
         else:
             cursor.execute(ts.update_animal, {"id": i["anim"], "ind": i["ind"]})
+    
 
 
 def init_photo(cursor):

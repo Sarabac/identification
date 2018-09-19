@@ -118,6 +118,8 @@ def application(cursor, conn):
         donnees = json.loads(request.get_data().decode())
         gestion.update_individu(cursor, donnees)
         conn.commit()
+        cursor.execute(ts.clear_individus)
+        conn.commit()
         return jsonify(status="ok")
 
     @app.route('/static-photos/<path:filename>')

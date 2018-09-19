@@ -64,7 +64,9 @@
     <div class = "droppable" id="newinddrop"></div>
 
   </form>
+  {%if none in individus.keys()%}
     {{navigation(individus[none], none)}}
+  {%endif%}
   </main>
   <article>
   {%for ind in individus.keys()%}

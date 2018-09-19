@@ -38,5 +38,23 @@ oiseaux = """
     WHERE nom_espece IN ('oiseau')
     """
 
+bouquet = """
+    SELECT id_animal FROM animal
+    INNER JOIN Caracteriser ON fk_animal = id_animal
+    INNER JOIN Modalite ON fk_modalite = id_modalite
+    INNER JOIN Caractere ON fk_caractere = id_caractere
+    WHERE nom_caractere = "bois" AND nom_modalite = "quatre"
+    """
+bebe = """
+    SELECT id_animal FROM animal
+    INNER JOIN Caracteriser ON fk_animal = id_animal
+    INNER JOIN Modalite ON fk_modalite = id_modalite
+    INNER JOIN Caractere ON fk_caractere = id_caractere
+    WHERE nom_caractere = "bois" AND nom_modalite = 'abscents'
+    """
+
+
 filtres("chevreuil", male_chevreuils, "male_chevreuils")
 filtres("oiseau", oiseaux, "oiseaux")
+filtres("chevreuil", bouquet, "bouquet")
+filtres("chevreuil", bebe, "bebe")

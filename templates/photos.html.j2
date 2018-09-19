@@ -34,6 +34,7 @@ modalite: dict de la forme[id_caractere : (id, nom)...] avec
   {%for id,che in photos%}
     <img class=photo
     src={{url_for('send_photo', filename=che)}}
+    title="{{che}}"
     data-url={{url_for('send_photo', filename=che)}}
     data-num={{id}} />
       {#on retire les 7 premieres lettres de che qui correspondent a 'static/'
