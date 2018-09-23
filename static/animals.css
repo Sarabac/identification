@@ -61,7 +61,7 @@ article{
 }
 
 form{
-  display: inline-block;
+  display: block;
 }
 
 /* Style the tab */
