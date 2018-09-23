@@ -7,7 +7,7 @@
 
 body {
   display: grid;
-  grid-template-columns: 30vw 70vw;
+  grid-template-columns: 50vw 50vw;
   grid-template-rows: 95vh;
   height: 90vh;
   width: 100vw;
@@ -30,12 +30,16 @@ header>*{
 .animdiv {
   display: flex;
   padding: 1px;
-  width: 30vw;
+  width: 100%;
+}
+
+
+.animdiv.ui-draggable-dragging{
+  width: 20vw;
 }
 
 .camdiv{
   display: none;
-  overflow-y: scroll;
   height: 100%;
 }
 
@@ -53,13 +57,38 @@ article{
   display: flex;
   grid-column: 2;
   grid-row: 1;
-  overflow: scroll;
+  flex-direction: column;
 }
 
 form{
   display: inline-block;
 }
 
-main nav {
+/* Style the tab */
+.ui-tabs-nav {
+   border: 1px solid #ccc;
+   background-color: #f1f1f1;
+   list-style: none;
 
+}
+
+/* Style the buttons that are used to open the tab content */
+.ui-tabs-nav li {
+   background-color: inherit;
+   float: left;
+   border: none;
+   outline: none;
+   cursor: pointer;
+   padding: 14px 16px;
+   transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.ui-tabs-nav li:hover {
+   background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.ui-tabs-nav li.active {
+   background-color: #ccc;
 }

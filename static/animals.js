@@ -112,6 +112,7 @@ $(function(){
   $('img').on('dragstart', function(event) { event.preventDefault(); })
   $(".animdiv").draggable({"helper": 'clone'}).dblclick(open_serie)
   $(".droppable").droppable({"drop":drop2})
+  $("article").tabs()
 
   $(".cameras option").click(click_camera)
 
