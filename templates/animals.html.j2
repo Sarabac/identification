@@ -43,6 +43,7 @@
 
 {% block style_origin %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='animals.css') }}">
+{#<link rel=stylesheet type=text/css href="{{ url_for('static', filename='jquery-ui/jquery-ui.min.css') }}">#}
 {% endblock %}
 
 {% block script %}
@@ -69,6 +70,13 @@
   {%endif%}
   </main>
   <article>
+    <ul>
+    {%for ind in individus.keys()%}
+    {%if ind is not none%}
+      <li><a href="#indiv{{ind}}">{{description[ind]["nom"]}}</a></li>
+    {%endif%}
+    {%endfor%}
+    </ul>
   {%for ind in individus.keys()%}
   {%if ind is not none%}
     {{navigation(individus[ind], ind, description[ind]["nom"], description[ind]["comm"])}}
