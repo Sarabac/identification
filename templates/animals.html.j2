@@ -9,7 +9,7 @@
 
 #}
 {% macro navigation(cameras, id, nom = "", comm = "") %}
-<nav data-id = {{id}}>
+<nav data-id = {{id}} id = "indiv{{id}}">
 <header>
 <select class="cameras" name="cameras">
   {%for cam in cameras.keys()%}
@@ -48,7 +48,7 @@
 {% block script %}
 <script type=text/javascript src={{ url_for('static', filename='animals.js') }}></script>
 <script type=text/javascript src={{ url_for('static', filename='jquery.elevatezoom.js') }}></script>
-<script type=text/javascript src={{ url_for('static', filename='jquery-ui.min.js') }}></script>
+<script type=text/javascript src={{ url_for('static', filename='jquery-ui/jquery-ui.min.js') }}></script>
 {% endblock %}
 
 {% block body %}
