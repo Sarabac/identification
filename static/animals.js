@@ -108,6 +108,12 @@ count_anim_cam = function(){
   });
 }
 
+ration_change = function(){
+  val = $(this).val()
+  console.log(val);
+  $("body").css('grid-template-columns', val +"vw " + (100-val) + "vw");
+}
+
 $(function(){
   $('img').on('dragstart', function(event) { event.preventDefault(); })
   $(".animdiv").draggable({"helper": 'clone'}).dblclick(open_serie)
@@ -115,6 +121,7 @@ $(function(){
   $("article").tabs()
 
   $(".cameras option").click(click_camera)
+  $("#ratio").on("input", ration_change)
 
 
   $(document).keypress(zomm_press)
