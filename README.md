@@ -11,15 +11,16 @@ python3 module: flask<br/>
 python3 module: pillow<br/>
 </p>
 <h2>Shortcut</h2>
+<h3>Shortcut</h3>
 <p>
-w: save
-d: check
-a: uncheck
+w: save and go back<br/>
+d: check<br/>
+a: uncheck<br/>
+<p>
 
 z: enable/disable zoom
 </p>
 
-<p> test </p>
 
 <h2>Initialization</h2>
 
@@ -41,3 +42,10 @@ If you displace or delete the database, the software will do the Initialisation 
 
 <h2>Usage</h2>
 no described yet
+
+<h3>sort_pictures.py</h3>
+if you launch this script, it will create a folder of camera where the animals ar sorted in subfolders.
+
+<h3>convert_event_to_excsl2.R</h3>
+create a excel sheet and a csv sheet with each event, it date and it description.
+Not finished
